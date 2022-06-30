@@ -1,0 +1,32 @@
+html.dark,
+html.light {
+  @apply transition-colors;
+}
+.c-text {
+  @apply text-dark-200
+  dark:text-gray-50;
+}
+.c-text-sub {
+  @apply text-dark-50
+  dark:text-gray-400;
+}
+.c-bg-base {
+  @apply bg-white dark:bg-[#141414];
+}
+.c-bg {
+  @apply bg-white
+  dark:bg-[#1b1c1d];
+}
+.c-bg-light {
+  @apply bg-white
+  dark:bg-[#2a2a2a];
+}
+.c-border {
+  @apply border-1 border-dark-800
+  dark: border-dark-100;
+}
+
+.c-shadow {
+  @apply shadow-md shadow
+  dark:shadow-none dark:border-dark-100 dark:border-1;
+}
