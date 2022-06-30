@@ -1,25 +1,32 @@
 <script setup lang="ts">
 import { useAuthStore } from '@/store/auth'
 type CommandType = 'info' | 'clear' | 'out'
-const handleCommand = (type: CommandType) => {
-  console.log(type)
-}
 const authStore = useAuthStore()
+
+const handleCommand = (type: CommandType) => {
+  if (type === 'clear') {
+    authStore.logout(true)
+  } else if (type === 'out') {
+    authStore.logout()
+  }
+}
 </script>
 
 <template>
   <div class="header-avatar">
     <el-dropdown>
-      <span class="el-dropdown-link select-none flex items-center">
+      <span
+        class="el-dropdown-link select-none flex items-center cursor-pointer"
+      >
         <el-avatar
           class="bg-light-900"
           icon="el-icon-user-solid"
-          size="default"
+          size="small"
           shape="circle"
           :src="authStore.userInfo?.avatar || '/avatar.jpg'"
           fit="fill"
         ></el-avatar>
-        <span class="ml-1 text-base">
+        <span class="ml-2 text-base !light:text-white">
           {{ authStore.userInfo?.name }}
         </span>
         <i class="fas fa-chevron-down ml-2 text-gray-400"></i>

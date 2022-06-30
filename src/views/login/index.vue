@@ -2,7 +2,12 @@
 import LoginAccount from './components/login-account.vue'
 import loginPhone from './components/login-phone.vue'
 import ChangeTheme from './components/change-theme.vue'
+import { useAuthStore } from '@/store/auth'
 const tabName = ref('account')
+const authStore = useAuthStore()
+onMounted(() => {
+  authStore.clearLocalStorage()
+})
 </script>
 
 <template>

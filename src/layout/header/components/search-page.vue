@@ -30,7 +30,6 @@ watch(searchWord, () => {
     // [ {},{} ] =>  [ [{},{}], [{},{}] ]
     const currents = getRouteByWord(word, deepCopy(routes))
     list.value = getParentAndCurrent(currents, deepCopy(menus))
-    console.log(list.value)
   } else {
     list.value = []
   }

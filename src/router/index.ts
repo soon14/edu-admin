@@ -41,7 +41,10 @@ router.beforeEach(async (to) => {
   const token = authStore.token
   const userInfo = authStore.userInfo
   if (token) {
-    if (!userInfo && !isRefresh) {
+    if (to.path === '/login') {
+      return '/'
+    }
+    if (!userInfo && !isRefresh && to.path !== '/login') {
       isRefresh = true
       // 1.获取用户信息
       const { menus } = await authStore.getUserinfo()
@@ -53,11 +56,8 @@ router.beforeEach(async (to) => {
       // 4.根据官方文档, 动态注册路由后, 需要replace或者push, 否则bug
       return to.fullPath
     }
-    if (to.name === 'login') {
-      return '/home'
-    }
   } else {
-    if (to.name !== 'login') {
+    if (to.path !== '/login') {
       return '/login'
     }
   }

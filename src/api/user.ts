@@ -9,10 +9,13 @@ export const loginApi = (data: ILoginProps) => {
     data
   })
 }
+export const logoutApi = () => {
+  return request.post({
+    url: 'logout'
+  })
+}
 export const userInfoApi = () => {
-  const token = useAuthStore().token
   return request.get<IUserinfoResponse>({
-    url: '/admin/user/info',
-    params: { token }
+    url: '/admin/user/info'
   })
 }

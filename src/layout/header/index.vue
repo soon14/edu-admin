@@ -5,7 +5,7 @@ import SearchPage from './components/search-page.vue'
 </script>
 
 <template>
-  <div class="header">
+  <div class="header !light:text-white">
     <div class="header-logo" @click="$router.push('/')">
       <img src="/paina.svg" alt="" />
       <h1>SCUI</h1>
