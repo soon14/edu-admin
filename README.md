@@ -13,6 +13,3 @@ vite
 支持element和components文件下组件自动导入, 自动生成组件的*.d.ts类型文件
 支持自动引入 vue, vue-router, element的api
 支持vite触发eslint警告
-
-
-用于测试学习, 勿用在生产环境
