@@ -26,3 +26,7 @@ html.light {
   @apply shadow-md shadow
   dark:shadow-none dark:border-dark-100 dark:border-1;
 }
+
+.el-menu {
+  @apply border-none;
+}

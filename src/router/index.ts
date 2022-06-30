@@ -62,6 +62,16 @@ router.beforeEach(async (to) => {
     }
   }
 })
+const iconMap: Record<string, string> = {
+  Course: 'fa-brands fa-discourse',
+  Home: 'fa-brands fa-house',
+  Marketing: 'fas fa-fire',
+  Pay: 'fas fa-file-invoice-dollar',
+  Renovation: 'fas fa-palette',
+  Setting: 'fas fa-gear',
+  Tool: 'fas fa-wrench',
+  User: 'fas fa-user-tie'
+}
 /**
  * 根据请求的菜单数据动态添加路由, 返回所有注册的路由记录 (扁平)
  */
@@ -93,7 +103,7 @@ function getMenus(menus: IMenu[], routes: RouteRecordRaw[]) {
       tempObj.name = item.name
       tempObj.meta.hidden = item.hidden ?? targetRoute?.meta?.hidden
       tempObj.meta.title = item.title ?? targetRoute?.meta?.title
-      tempObj.meta.icon = targetRoute?.meta?.icon
+      tempObj.meta.icon = iconMap[item.name] || targetRoute?.meta?.icon
       result.push(tempObj)
       if (item.children && item.children.length) {
         tempObj.children = []

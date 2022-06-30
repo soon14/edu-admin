@@ -7,7 +7,8 @@ import { defineStore } from 'pinia'
 export const useSystem = defineStore('main', {
   state: () => {
     return {
-      theme: getTheme() as 'dark' | 'light'
+      theme: getTheme() as 'dark' | 'light',
+      collapse: false
     }
   },
   getters: {},
@@ -23,6 +24,9 @@ export const useSystem = defineStore('main', {
     resetTheme() {
       this.theme = 'dark'
       setHtmlAttr('dark')
+    },
+    changeCollapse() {
+      this.collapse = !this.collapse
     }
   }
 })

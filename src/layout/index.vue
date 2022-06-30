@@ -1,26 +1,34 @@
 <script setup lang="ts">
 import CHeader from './header/index.vue'
+import Aside from './aside'
+import MainHeader from './main-header/index.vue'
+import { useSystem } from '@/store/system'
+const systemStore = useSystem()
+const collapse = computed(() => systemStore.collapse)
 </script>
 
 <template>
   <div class="layout">
     <el-container class="c-bg-base">
-      <!-- 头部logo 头像, 全屏, 消息 等组件 -->
       <el-header class="layout-header el-card c-border">
+        <!-- 头部logo 头像, 全屏, 消息 等组件 -->
         <CHeader></CHeader>
       </el-header>
       <el-container>
-        <!--侧导航 -->
         <el-aside
           class="layout-left el-card c-border hidden md:block"
-          width="200px"
-          >Aside</el-aside
+          :width="collapse ? 'auto' : '200px'"
         >
+          <el-scrollbar>
+            <!--侧导航 -->
+            <Aside></Aside>
+          </el-scrollbar>
+        </el-aside>
         <el-main class="layout-right c-bg-base p-0">
           <!--面包屑 和 记忆模块 -->
-          <el-header class="layout-right-header el-card c-border"
-            >Header</el-header
-          >
+          <el-header class="layout-right-header el-card c-border">
+            <MainHeader />
+          </el-header>
           <!-- router view -->
           <el-card class="layout-right-content m-4" shadow="never">
             <router-view></router-view>
