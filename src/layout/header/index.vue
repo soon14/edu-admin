@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import HeaderAvatar from './components/avatar.vue'
+import FullScreen from './components/full-screen.vue'
+import SearchPage from './components/search-page.vue'
 </script>
 
 <template>
@@ -9,6 +11,8 @@ import HeaderAvatar from './components/avatar.vue'
       <h1>SCUI</h1>
     </div>
     <div class="header-actions">
+      <search-page></search-page>
+      <full-screen class="mx-4"></full-screen>
       <header-avatar></header-avatar>
     </div>
   </div>
@@ -25,6 +29,9 @@ import HeaderAvatar from './components/avatar.vue'
     h1 {
       @apply text-xl select-none;
     }
+  }
+  .header-actions {
+    @apply flex items-center;
   }
 }
 </style>

@@ -89,7 +89,7 @@ function getMenus(menus: IMenu[], routes: RouteRecordRaw[]) {
       const targetRoute = routes.find((it) => it.name === item.name)
       const tempObj = {} as RouteRecordRaw
       tempObj.meta = {}
-      tempObj.path = '/' + targetRoute?.path || ''
+      tempObj.path = targetRoute?.path ? '/' + targetRoute?.path : ''
       tempObj.name = item.name
       tempObj.meta.hidden = item.hidden ?? targetRoute?.meta?.hidden
       tempObj.meta.title = item.title ?? targetRoute?.meta?.title
@@ -108,7 +108,7 @@ function getMenus(menus: IMenu[], routes: RouteRecordRaw[]) {
 /**
  * 转换为扁平
  */
-function bpMenus<T = any>(menus: any[]): T[] {
+export function bpMenus<T = any>(menus: any[]): T[] {
   const result: T[] = []
   const deep = (menus: any[]) => {
     menus.forEach((it) => {
