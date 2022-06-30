@@ -1,7 +1,7 @@
 <script setup lang="ts"></script>
 
 <template>
-  <div class="">2</div>
+  <div class="">pc-index</div>
 </template>
 
 <style scoped lang="scss"></style>
