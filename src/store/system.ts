@@ -13,7 +13,6 @@ export const useSystem = defineStore('main', {
   getters: {},
   actions: {
     changeTheme() {
-      console.log(this.theme)
       if (this.theme === 'dark') {
         this.theme = 'light'
       } else {
@@ -23,6 +22,8 @@ export const useSystem = defineStore('main', {
     }
   }
 })
+getTheme()
+
 function getTheme() {
   const theme = storage.get<string>(THEME) || 'dark'
   setHtmlAttr(theme)
