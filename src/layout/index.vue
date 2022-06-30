@@ -1,10 +1,14 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import CHeader from './header/index.vue'
+</script>
 
 <template>
   <div class="layout">
     <el-container class="c-bg-base">
       <!-- 头部logo 头像, 全屏, 消息 等组件 -->
-      <el-header class="layout-header el-card c-border">Header</el-header>
+      <el-header class="layout-header el-card c-border">
+        <CHeader></CHeader>
+      </el-header>
       <el-container>
         <!--侧导航 -->
         <el-aside
