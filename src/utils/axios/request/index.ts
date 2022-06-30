@@ -38,7 +38,7 @@ export class Request {
         // if (err.response.status === 404) {
         //   console.log('404错误')
         // }
-        const message = err.response.data || '请求失败, 请稍后再试'
+        const message = err.response.data?.data || '请求失败, 请稍后再试'
         ElMessage({
           type: 'error',
           message

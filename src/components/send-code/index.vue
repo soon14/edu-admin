@@ -10,7 +10,7 @@ const emit = defineEmits<{
 }>()
 const currentTime = ref(props.time)
 let timer: any = null
-let isLock = false
+const isLock = ref(false)
 
 const msgCalc = computed(() => {
   if (currentTime.value <= 0 || currentTime.value === props.time) {
@@ -20,15 +20,16 @@ const msgCalc = computed(() => {
 })
 
 const send = () => {
-  if (isLock) return
-  isLock = true
+  if (isLock.value) return
+  ElMessage({ type: 'success', message: '短信验证码已发送' })
+  isLock.value = true
   currentTime.value--
   timer = setInterval(() => {
     currentTime.value--
     if (currentTime.value === 0) {
       currentTime.value = props.time
       clearInterval(timer)
-      isLock = false
+      isLock.value = false
       emit('send')
     }
   }, 1000)
@@ -39,7 +40,7 @@ defineExpose({ send })
 
 <template>
   <div class="send-code">
-    <el-button type="" :disabled="isLock">{{ msgCalc }}</el-button>
+    <el-button type="primary" :disabled="isLock" plain>{{ msgCalc }}</el-button>
   </div>
 </template>
 

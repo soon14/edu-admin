@@ -10,7 +10,8 @@ const request = new Request({
     requestInterceptors: (config) => {
       const token = storage.get(TOKEN)
       if (token && config.headers) {
-        config.headers.Authorization = `Bearer ${token}`
+        config.headers.token = `${token}`
+        config.headers.schoolid = 11
       }
       return config
     },

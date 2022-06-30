@@ -1,9 +1,7 @@
 <script setup lang="ts"></script>
 
 <template>
-  <div class="layout">
-    <router-view></router-view>
-  </div>
+  <div class="home">demo.vue</div>
 </template>
 
 <style scoped lang="scss"></style>

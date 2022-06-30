@@ -53,7 +53,7 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: '',
+        target: 'http://demonuxtapi.dishait.cn',
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, '')
       }

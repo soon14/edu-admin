@@ -1,17 +1,55 @@
 <script setup lang="ts">
-const formData = ref({
-  name: '',
-  password: ''
+import { AUTO_LOGIN } from '@/constants/storage'
+import { storage } from '@/utils/storage'
+import { useAuthStore } from '@/store/auth'
+import rules from './config/login-account'
+import type { ElFormType } from '@/types/element-plus'
+import type { ILoginProps } from './types'
+const formData = ref<ILoginProps>({
+  username: 'ceshi1',
+  password: 'ceshi1'
 })
-const rules = {
-  name: [{ required: true, message: '用户名不能为空', trigger: 'blur' }],
-  password: [{ required: true, message: '密码不能为空', trigger: 'blur' }]
-}
+
 const autoLogin = ref(false)
-const handleSubmit = (e: Event) => {
+const formRef = ref<ElFormType | null>(null)
+const authStore = useAuthStore()
+
+const handleSubmit = async (e: Event) => {
   e.preventDefault()
-  console.log(123)
+  formRef?.value?.validate(async (valid) => {
+    if (valid) {
+      const { username, password } = formData.value
+      const params = { username, password }
+      if (autoLogin.value) {
+        if (formData.value.username.trim() && formData.value.password.trim()) {
+          storage.set(AUTO_LOGIN, params, 24 * 60 * 60)
+        }
+      } else {
+        storage.remove(AUTO_LOGIN)
+      }
+      // 登录
+      authStore.login(params)
+    }
+  })
 }
+
+const initAutoLogin = () => {
+  const result = storage.get(AUTO_LOGIN)
+  if (!result) {
+    autoLogin.value = false
+  } else {
+    autoLogin.value = true
+    formData.value.username = result.username || ''
+    formData.value.password = result.password || ''
+  }
+}
+
+watch(autoLogin, () => {
+  if (!autoLogin.value) {
+    storage.remove(AUTO_LOGIN)
+  }
+})
+initAutoLogin()
 </script>
 
 <template>
@@ -19,12 +57,16 @@ const handleSubmit = (e: Event) => {
     <el-form
       ref="formRef"
       :model="formData"
-      :rules="rules"
+      :rules="rules()"
       size="default"
       @submit="handleSubmit"
     >
-      <el-form-item prop="name">
-        <el-input v-model="formData.name" placeholder="请输入账号" clearable>
+      <el-form-item prop="username">
+        <el-input
+          v-model="formData.username"
+          placeholder="请输入账号"
+          clearable
+        >
           <template #prefix>
             <i class="fas fa-user"></i>
           </template>

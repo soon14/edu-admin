@@ -1,0 +1,7 @@
+export default {
+  path: '{{dirname}}/{{routerName}}',
+  name: '{{name}}',
+  component: () => import('@/views/{{dirname}}/{{routerName}}/index.vue'),
+  meta: { icon: '{{icon}}', title: '{{title}}' },
+  children: []
+}

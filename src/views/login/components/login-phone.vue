@@ -1,17 +1,22 @@
 <script setup lang="ts">
 import { ElFormType } from '@/types/element-plus'
 import SendCode from '@/components/send-code/index.vue'
+import rules from './config/login-phone'
 const formData = ref({
   phone: '',
   code: ''
 })
-const rules = {
-  phone: [{ required: true, message: '手机号不能为空', trigger: 'blur' }],
-  code: [{ required: true, message: '验证码不能为空', trigger: 'blur' }]
-}
+
 const formRef = ref<ElFormType | null>(null)
 const handleSubmit = (e: Event) => {
   e.preventDefault()
+  formRef?.value?.validate((valid) => {
+    if (valid) {
+      ElMessage({
+        message: '测试数据, 请用`账号密码`的方式登录'
+      })
+    }
+  })
 }
 const sendCodeRef = ref<InstanceType<typeof SendCode> | null>(null)
 const handleSendCode = () => {
@@ -28,18 +33,26 @@ const handleSendCode = () => {
     <el-form
       ref="formRef"
       :model="formData"
-      :rules="rules"
+      :rules="rules()"
       size="default"
       @submit="handleSubmit"
     >
       <el-form-item prop="phone">
-        <el-input v-model="formData.phone" placeholder="请输入手机号">
+        <el-input
+          v-model="formData.phone"
+          placeholder="请输入手机号"
+          :maxlength="11"
+        >
           <template #prepend>+86</template>
         </el-input>
       </el-form-item>
       <el-form-item prop="code" placeholder="请输入手机验证码">
         <div class="form-code-box">
-          <el-input v-model="formData.code" class="code-input"></el-input>
+          <el-input
+            v-model="formData.code"
+            class="code-input"
+            :maxlength="5"
+          ></el-input>
           <send-code
             @click="handleSendCode"
             :time="3"
