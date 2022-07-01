@@ -26,7 +26,7 @@ const handleCommand = (type: CommandType) => {
           :src="authStore.userInfo?.avatar || '/avatar.jpg'"
           fit="fill"
         ></el-avatar>
-        <span class="ml-2 text-base !light:text-white">
+        <span class="ml-2 text-base">
           {{ authStore.userInfo?.name }}
         </span>
         <i class="fas fa-chevron-down ml-2 text-gray-400"></i>

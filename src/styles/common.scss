@@ -21,7 +21,10 @@ html.light {
   @apply border-1 border-gray-200
   dark: border-gray-600;
 }
-
+.c-border-top {
+  @apply border-t-1 border-gray-200
+  dark: border-gray-600;
+}
 .c-shadow {
   @apply shadow-md shadow
   dark:shadow-none dark:border-dark-100 dark:border-1;

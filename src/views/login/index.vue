@@ -22,8 +22,8 @@ onMounted(() => {
     <div class="login-right">
       <div class="login-right-inner">
         <div class="logo">
-          <img src="/paina.svg" alt="" />
-          <div class="title">后台管理平台</div>
+          <img src="/windi_logo.svg" alt="" />
+          <!-- <div class="title">Windi Css</div> -->
         </div>
         <el-tabs
           v-model="tabName"
@@ -72,15 +72,16 @@ onMounted(() => {
   .login-right {
     @apply flex flex-1 flex-col items-center justify-center min-h-390px;
     .login-right-inner {
-      @apply h-96 min-h-390px flex flex-col items-center;
+      @apply h-96 min-h-290px flex flex-col items-center;
+      transform: translateY(-50px);
     }
     .logo {
       @apply flex items-center text-2xl pb-6;
       img {
-        @apply w-8;
+        @apply w-20;
       }
       .title {
-        @apply mx-2 whitespace-nowrap;
+        @apply mx-1 whitespace-nowrap font-light text-base tracking-widest;
       }
     }
     .login-tabs-box {

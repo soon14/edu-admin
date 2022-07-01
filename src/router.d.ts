@@ -5,5 +5,6 @@ declare module 'vue-router' {
     hidden?: boolean
     title?: string
     icon?: string
+    hiddenHistory?: boolean
   }
 }

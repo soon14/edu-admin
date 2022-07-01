@@ -9,7 +9,7 @@ const formData = ref<ILoginProps>({
   username: 'ceshi1',
   password: 'ceshi1'
 })
-
+const loading = ref(false)
 const autoLogin = ref(false)
 const formRef = ref<ElFormType | null>(null)
 const authStore = useAuthStore()
@@ -27,8 +27,13 @@ const handleSubmit = async (e: Event) => {
       } else {
         storage.remove(AUTO_LOGIN)
       }
+      loading.value = true
       // 登录
-      authStore.login(params)
+      try {
+        await authStore.login(params)
+      } finally {
+        loading.value = false
+      }
     }
   })
 }
@@ -92,7 +97,11 @@ initAutoLogin()
         </div>
       </el-form-item>
       <el-form-item>
-        <el-button class="login-btn" type="primary" native-type="submit"
+        <el-button
+          class="login-btn"
+          type="primary"
+          native-type="submit"
+          :loading="loading"
           >登录</el-button
         >
       </el-form-item>

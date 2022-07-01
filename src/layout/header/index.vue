@@ -5,10 +5,10 @@ import SearchPage from './components/search-page.vue'
 </script>
 
 <template>
-  <div class="header !light:text-white">
+  <div class="header">
     <div class="header-logo" @click="$router.push('/')">
-      <img src="/paina.svg" alt="" />
-      <h1>SCUI</h1>
+      <img src="/windi_logo.svg" alt="" />
+      <!-- <h1>Windi Css</h1> -->
     </div>
     <div class="header-actions">
       <search-page></search-page>
@@ -24,10 +24,10 @@ import SearchPage from './components/search-page.vue'
   .header-logo {
     @apply flex items-center cursor-pointer;
     img {
-      @apply w-4 mr-2;
+      @apply w-10;
     }
     h1 {
-      @apply text-xl select-none;
+      @apply font-light text-sm select-none tracking-widest;
     }
   }
   .header-actions {

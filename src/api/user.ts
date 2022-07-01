@@ -1,4 +1,3 @@
-import { useAuthStore } from '@/store/auth'
 import request from '@/utils/axios'
 import type { ILoginProps } from '@/views/login/components/types'
 import type { ILoginResponse, IUserinfoResponse } from './types/user'

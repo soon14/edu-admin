@@ -16,6 +16,7 @@ const routes: RouteRecordRaw[] = [
       {
         path: '',
         name: 'home',
+        meta: { title: '主页', hiddenHistory: true },
         component: Home
       }
     ]
@@ -41,9 +42,6 @@ router.beforeEach(async (to) => {
   const token = authStore.token
   const userInfo = authStore.userInfo
   if (token) {
-    if (to.path === '/login') {
-      return '/'
-    }
     if (!userInfo && !isRefresh && to.path !== '/login') {
       isRefresh = true
       // 1.获取用户信息
@@ -55,6 +53,9 @@ router.beforeEach(async (to) => {
       authStore.setMenus(menusResult)
       // 4.根据官方文档, 动态注册路由后, 需要replace或者push, 否则bug
       return to.fullPath
+    }
+    if (to.path === '/login') {
+      return '/'
     }
   } else {
     if (to.path !== '/login') {
@@ -112,6 +113,12 @@ function getMenus(menus: IMenu[], routes: RouteRecordRaw[]) {
     })
   }
   deep(result, deepCopy(menus))
+  result.unshift({
+    path: '/',
+    name: 'home',
+    meta: { title: '主页', icon: 'fas fa-house-user' },
+    component: Home
+  })
   return result
 }
 

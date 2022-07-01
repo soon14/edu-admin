@@ -1,4 +1,4 @@
-import { defineComponent, PropType } from 'vue'
+import { defineComponent } from 'vue'
 import { ElMenu, ElMenuItem, ElSubMenu } from 'element-plus'
 import 'element-plus/es/components/menu/style/css'
 import { useAuthStore } from '@/store/auth'
