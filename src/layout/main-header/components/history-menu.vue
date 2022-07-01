@@ -61,7 +61,7 @@ const handleToPageByPath = (path: string) => {
         >
           {{ item.title }}
           <i
-            class="fas fa-xmark light:text-gray-400 light:hover:text-gray-900 duration-200 dark:hover:text-white"
+            class="fas fa-xmark light:text-gray-400 light:hover:text-gray-900 dark:hover:text-white"
             v-if="item.path !== '/'"
             @click.stop="handleRemoveItemByPath(item.path)"
           ></i>
@@ -80,7 +80,9 @@ const handleToPageByPath = (path: string) => {
   .history-item {
     @apply py-2 px-4 text-sm select-none cursor-pointer
             flex-none
-          hover: bg-white hover:bg-opacity-40 rounded-none border-t-0 border-b-0 border-l-0;
+          hover: bg-white hover:bg-opacity-40 hover:dark:text-white
+             rounded-none border-t-0 border-b-0 border-l-0
+            dark:text-gray-400;
 
     i {
       @apply text-sm ml-2 hover: scale-125;
@@ -88,7 +90,7 @@ const handleToPageByPath = (path: string) => {
 
     &.active {
       @apply bg-white bg-opacity-40 border-opacity-0
-              light:bg-light-600;
+              light:bg-light-600 dark:text-white;
     }
   }
 }
