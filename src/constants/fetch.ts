@@ -1,3 +1,12 @@
+export enum ApiEnum {
+  CREATE_API = 'CREATE_API',
+  DELETE_API = 'DELETE_API',
+  UPDATE_API = 'UPDATE_API',
+  LIST_API = 'LIST_API',
+  INFO_API = 'INFO_API',
+  UPDATE_STATE_API = 'UPDATE_STATE_API',
+  UPLOAD_API = 'UPLOAD_API'
+}
 // 常量
 // create remove delete list info update update_state upload
 // 增

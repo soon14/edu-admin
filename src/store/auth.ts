@@ -4,7 +4,7 @@ import { defineStore } from 'pinia'
 import { loginApi, logoutApi, userInfoApi } from '@/api/module/user'
 import { ILoginProps } from '@/views/login/components/types'
 import router from '@/router/'
-import { IUserinfoResponse } from '@/api/types/user'
+import { IUserinfoResponse } from '@/api/module/types/user'
 import pick from 'lodash/pick'
 import { useSystem } from './system'
 // useStore 可以是任意名称，比如useUser，useCart。

@@ -4,7 +4,7 @@ import Layout from '@/layout/index.vue'
 import Login from '@/views/login/index.vue'
 import Home from '@/views/home/index.vue'
 import { useAuthStore } from '@/store/auth'
-import { IMenu } from '@/api/types/user'
+import { IMenu } from '@/api/module/types/user'
 import deepCopy from 'lodash/cloneDeep'
 // import module from './module'
 const routes: RouteRecordRaw[] = [
