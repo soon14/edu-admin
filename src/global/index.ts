@@ -1,4 +1,5 @@
 import type { App } from 'vue'
+import { setupFetchApi } from '@/api/'
 import { createPinia } from 'pinia'
 import router from '@/router/'
 import 'virtual:windi.css'
@@ -7,6 +8,7 @@ import 'element-plus/theme-chalk/dark/css-vars.css'
 
 export const setupApp = (app: App) => {
   const pinia = createPinia()
+  app.use(setupFetchApi)
   app.use(pinia)
   app.use(router)
   app.mount('#app')

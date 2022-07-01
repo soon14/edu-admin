@@ -1,7 +1,7 @@
 import { TOKEN, MENUS } from '@/constants/storage'
 import { storage } from '@/utils/storage'
 import { defineStore } from 'pinia'
-import { loginApi, logoutApi, userInfoApi } from '@/api/user'
+import { loginApi, logoutApi, userInfoApi } from '@/api/module/user'
 import { ILoginProps } from '@/views/login/components/types'
 import router from '@/router/'
 import { IUserinfoResponse } from '@/api/types/user'
