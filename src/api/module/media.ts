@@ -18,7 +18,7 @@ export default {
     })
   },
   // 更新课程
-  [ApiEnum.UPDATE_API](data: ICourseRequest & { id: number }) {
+  [ApiEnum.UPDATE_API](data: ICourseRequest) {
     return request.post<ICourseResponse>({
       url: '/admin/s/course/update',
       data

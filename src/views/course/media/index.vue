@@ -3,10 +3,15 @@ import mediaApi from '@/api/module/media'
 import {
   ICourseResponse,
   ICourseListRequest,
-  ICourseDeleteRequest
+  ICourseDeleteRequest,
+  ICourseRequest
 } from '@/api/module/types/course'
 import { ApiEnum } from '@/constants/fetch'
+import { ElFormType } from '@/types/element-plus'
 import { formatDate } from '@/utils/date'
+import { FormRules } from 'element-plus'
+import { cloneDeep } from '@/utils/lodash/'
+
 // 查
 const queryParams = ref<ICourseListRequest>({
   page: 1,
@@ -18,36 +23,46 @@ const queryParams = ref<ICourseListRequest>({
 const list = ref<ICourseResponse[]>([])
 const total = ref(0)
 const loading = ref(false)
+const dialogValidate = ref(false)
+const dialogTitle = ref('')
+const formData = ref<ICourseRequest & { id?: number | null }>({
+  id: null,
+  content: '',
+  cover: '',
+  price: 0,
+  t_price: 0,
+  status: 1,
+  title: '',
+  try: '',
+  type: 'media'
+})
+const rules: FormRules = {}
 const stateOptions = ref([
   { label: '全部', value: '' },
   { label: '已上架', value: 1 },
   { label: '已下架', value: 0 }
 ])
+const formRef = ref<ElFormType | null>(null)
+const formLoading = ref(false)
 const getListData = async () => {
   loading.value = true
   try {
     const fetchApi = mediaApi[ApiEnum.LIST_API]
     const data = await fetchApi({ ...queryParams.value })
+    data.items.forEach((it, index) => {
+      it.custom_index =
+        index + queryParams.value.limit * (queryParams.value.page - 1) + 1
+    })
     list.value = data.items
     total.value = data.total
-    console.log(data)
   } finally {
     loading.value = false
   }
 }
 // 改
-const updateData = async (item: ICourseResponse) => {
-  loading.value = true
-  try {
-    const fetchApi = mediaApi[ApiEnum.UPDATE_API]
-    await fetchApi(item)
-    ElMessage({
-      type: 'success',
-      message: '修改成功'
-    })
-  } finally {
-    loading.value = false
-  }
+const updateData = async (item: ICourseRequest) => {
+  const fetchApi = mediaApi[ApiEnum.UPDATE_API]
+  await fetchApi(item)
 }
 // 删
 const deleteData = async (params: ICourseDeleteRequest) => {
@@ -55,77 +70,143 @@ const deleteData = async (params: ICourseDeleteRequest) => {
   try {
     const fetchApi = mediaApi[ApiEnum.DELETE_API]
     await fetchApi(params)
-    ElMessage({
-      type: 'success',
-      message: '删除成功'
-    })
   } finally {
     loading.value = false
   }
 }
 // 增
-const createdData = async (item: ICourseResponse) => {
-  loading.value = true
+const createData = async (item: ICourseRequest) => {
+  const fetchApi = mediaApi[ApiEnum.CREATE_API]
+  await fetchApi(item)
+}
+const handleSearch = (e: Event) => {
+  e.preventDefault()
+  queryParams.value.page = 1
+  getListData()
+}
+const handleCreated = () => {
+  dialogTitle.value = '新增图文'
+  dialogValidate.value = true
+}
+const handleEdit = (row: ICourseResponse) => {
+  dialogTitle.value = '编辑图文'
+  dialogValidate.value = true
+  nextTick(() => {
+    formData.value = cloneDeep({
+      ...row,
+      price: parseFloat(row.price),
+      t_price: parseFloat(row.t_price)
+    })
+  })
+}
+const handleState = async (row: ICourseResponse) => {
+  row.editLoading = true
   try {
-    const fetchApi = mediaApi[ApiEnum.UPDATE_API]
-    await fetchApi(item)
-    ElMessage({
-      type: 'success',
-      message: '新增成功'
+    await updateData({
+      ...row,
+      status: row.status === 1 ? 0 : 1,
+      price: parseFloat(row.price),
+      t_price: parseFloat(row.t_price)
     })
   } finally {
-    loading.value = false
+    row.editLoading = false
   }
+  await getListData()
+  ElMessage({
+    type: row.status ? 'warning' : 'success',
+    message: row.status ? '已下架' : '上架成功'
+  })
 }
-
-const handleEdit = (row: ICourseResponse) => {}
-const handleState = (row: ICourseResponse) => {}
-const handleDelete = (row: ICourseResponse) => {}
+const handleDelete = (row: ICourseResponse) => {
+  const title = `是否删除标题为 ${row.title} 的图文吗?`
+  ElMessageBox.confirm(title, '提示', {
+    type: 'warning',
+    confirmButtonText: '确定',
+    cancelButtonText: '取消'
+  }).then(async () => {
+    await deleteData({ ids: [row.id] })
+    ElMessage({
+      type: 'success',
+      message: '删除成功',
+      duration: 1500
+    })
+    await getListData()
+  })
+}
+const handleConfirm = async () => {
+  formLoading.value = true
+  try {
+    if (formData.value.id) {
+      await updateData({ ...formData.value })
+    } else {
+      await createData({ ...formData.value })
+    }
+  } finally {
+    formLoading.value = false
+  }
+  ElMessage({
+    type: 'success',
+    message: formData.value.id ? '编辑成功' : '新增成功'
+  })
+  dialogValidate.value = false
+  await getListData()
+}
+const handleClose = () => {
+  formRef.value?.resetFields()
+}
 getListData()
 </script>
 
 <template>
-  <el-card class="m-4 media" shadow="never">
+  <el-card class="md:m-4 media" shadow="never">
     <div class="media-header mb-4">
-      <el-row>
-        <el-col :span="24" :md="12"
-          ><el-button type="primary" :loading="loading"
-            >新增图文</el-button
-          ></el-col
-        >
-        <el-col :span="24" :md="12">
-          <div class="flex md:justify-end mt-2 md:mt-0">
-            <el-select
-              class="w-88px"
-              v-model="queryParams.status"
-              placeholder="请选择状态"
-            >
-              <el-option
-                v-for="item in stateOptions"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
+      <el-form @submit="handleSearch">
+        <el-row>
+          <el-col :span="24" :md="12"
+            ><el-button type="primary" :loading="loading" @click="handleCreated"
+              >新增图文</el-button
+            ></el-col
+          >
+          <el-col :span="24" :md="12">
+            <div class="flex md:justify-end mt-2 md:mt-0">
+              <el-select
+                class="w-88px"
+                v-model="queryParams.status"
+                placeholder="请选择状态"
               >
-              </el-option>
-            </el-select>
-            <el-input
-              class="w-150px md:w-240px mx-2"
-              v-model="queryParams.title"
-              type="text"
-              clearable
-              placeholder="标题"
-            ></el-input>
-            <el-button type="primary" plain :loading="loading">搜索</el-button>
-          </div>
-        </el-col>
-      </el-row>
+                <el-option
+                  v-for="item in stateOptions"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                >
+                </el-option>
+              </el-select>
+              <el-input
+                class="w-150px md:w-240px mx-2"
+                v-model="queryParams.title"
+                type="text"
+                clearable
+                placeholder="标题"
+              ></el-input>
+              <el-button
+                type="primary"
+                plain
+                :loading="loading"
+                native-type="submit"
+                >搜索</el-button
+              >
+            </div>
+          </el-col>
+        </el-row>
+      </el-form>
     </div>
     <el-table :data="list" v-loading="loading">
       <el-table-column
         align="center"
         header-align="center"
         label="#"
-        type="index"
+        prop="custom_index"
       ></el-table-column>
       <el-table-column label="图文内容" min-width="200px">
         <template #default="{ row }">
@@ -174,12 +255,17 @@ getListData()
         header-align="center"
         label="操作"
         fixed="right"
+        min-width="90px"
       >
         <template #default="{ row }">
           <el-row>
             <el-col :span="24" :md="8">
-              <el-button type="primary" plain @click="handleState(row)"
-                >上架</el-button
+              <el-button
+                :type="!!row.status ? 'warning' : 'success'"
+                plain
+                @click="handleState(row)"
+                :loading="row.editLoading"
+                >{{ !!row.status ? '下架' : '上架' }}</el-button
               ></el-col
             >
             <el-col :span="24" :md="8" class="my-1 md:my-0"
@@ -188,7 +274,7 @@ getListData()
               </el-button></el-col
             >
             <el-col :span="24" :md="8">
-              <el-button type="primary" plain @click="handleDelete(row)"
+              <el-button type="danger" plain @click="handleDelete(row)"
                 >删除</el-button
               ></el-col
             >
@@ -202,13 +288,57 @@ getListData()
       v-model:pageSize="queryParams.limit"
       :get-data="getListData"
     ></Pagination>
+    <DialogBase
+      :loading="formLoading"
+      v-model="dialogValidate"
+      :title="dialogTitle"
+      show-btn
+      @confirm="handleConfirm"
+      @close="handleClose"
+    >
+      <el-form
+        ref="formRef"
+        :model="formData"
+        :rules="rules"
+        label-width="80px"
+        size="default"
+      >
+        <el-form-item label="标题" prop="title">
+          <el-input v-model="formData.title"></el-input>
+        </el-form-item>
+        <el-form-item label="试看内容" prop="try">
+          <el-input v-model="formData.try"></el-input>
+        </el-form-item>
+        <el-form-item label="课程内容" prop="content">
+          <el-input v-model="formData.content"></el-input>
+        </el-form-item>
+        <el-form-item label="课程价格" prop="price">
+          <el-input-number
+            v-model="formData.price"
+            :min="0"
+            :precision="2"
+          ></el-input-number>
+        </el-form-item>
+        <el-form-item label="划线价格" prop="t_price">
+          <el-input-number
+            v-model="formData.t_price"
+            :min="0"
+            :precision="2"
+          ></el-input-number>
+        </el-form-item>
+        <el-form-item label="状态" prop="status">
+          <el-radio-group v-model="formData.status">
+            <el-radio :label="0">下架</el-radio>
+            <el-radio :label="1">上架</el-radio>
+          </el-radio-group>
+        </el-form-item>
+      </el-form>
+    </DialogBase>
   </el-card>
 </template>
 
 <style scoped lang="scss">
 .media {
-  .media-header {
-  }
   .course-graphics {
     @apply flex justify-center w-full;
     .course-cover {

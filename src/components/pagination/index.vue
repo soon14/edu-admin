@@ -17,6 +17,7 @@ const props = defineProps({
     default: null
   }
 })
+
 const emit = defineEmits<{
   (e: 'change', size: number): void
   (e: 'update:pageSize', size: number): void
@@ -31,6 +32,12 @@ const handleCurrentChange = (value: number) => {
   emit('update:currentPage', value)
   emit('change', value)
   props.getData && props.getData()
+  nextTick(() => {
+    const main = document.querySelector(
+      '.el-main.layout-right'
+    ) as HTMLDivElement
+    main.scrollTop = 0
+  })
 }
 </script>
 
