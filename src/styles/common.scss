@@ -33,3 +33,61 @@ html.light {
 .el-menu {
   @apply border-none;
 }
+html.dark {
+  .el-button--primary {
+    background-color: var(--el-color-primary-light-9);
+    color: var(--el-color-primary);
+    transition: all 0.2s;
+    border-color: var(--el-color-primary-light-3);
+    &:hover{
+      border-color: var(--el-color-primary);
+    }
+    &:active{
+      border-color: var(--el-color-primary);
+      background-color: var(--el-color-primary-light-7);
+    }
+  }
+  .el-button--danger {
+    background-color: var(--el-color-danger-light-9);
+    color: var(--el-color-danger);
+    transition: all 0.2s;
+    border-color: var(--el-color-danger-light-3);
+    &:hover{
+      border-color: var(--el-color-danger);
+    }
+    &:active{
+      border-color: var(--el-color-danger);
+      background-color: var(--el-color-danger-light-7);
+    }
+  }
+  .el-button--warning {
+    background-color: var(--el-color-warning-light-9);
+    color: var(--el-color-warning);
+    transition: all 0.2s;
+    border-color: var(--el-color-warning-light-3);
+    &:hover{
+      border-color: var(--el-color-warning);
+    }
+    &:active{
+      border-color: var(--el-color-warning);
+      background-color: var(--el-color-warning-light-7);
+    }
+  }
+  .el-button--success {
+    background-color: var(--el-color-success-light-9);
+    color: var(--el-color-success);
+    transition: all 0.2s;
+    border-color: var(--el-color-success-light-3);
+    &:hover{
+      border-color: var(--el-color-success);
+    }
+    &:active{
+      border-color: var(--el-color-success);
+      background-color: var(--el-color-success-light-7);
+    }
+  }
+  .el-table th.el-table__cell, .el-table-fixed-column--right{
+    background: var(--el-bg-color-overlay) !important;
+  }
+
+}

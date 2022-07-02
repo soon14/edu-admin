@@ -40,9 +40,7 @@ const collapse = computed(() => systemStore.collapse)
             <MainHeader />
           </el-header>
           <!-- router view -->
-          <el-card class="layout-right-content m-4" shadow="never">
-            <router-view></router-view>
-          </el-card>
+          <router-view></router-view>
         </el-main>
       </el-container>
     </el-container>
