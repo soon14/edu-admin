@@ -201,14 +201,20 @@ getListData()
         </el-row>
       </el-form>
     </div>
-    <el-table :data="list" v-loading="loading">
+    <el-table
+      :data="list"
+      v-loading="loading"
+      class="w-full"
+      table-layout="auto"
+    >
       <el-table-column
         align="center"
         header-align="center"
         label="#"
         prop="custom_index"
+        width="50px"
       ></el-table-column>
-      <el-table-column label="图文内容" min-width="200px">
+      <el-table-column label="图文内容">
         <template #default="{ row }">
           <div class="course-graphics">
             <div class="course-cover">
@@ -226,12 +232,13 @@ getListData()
         header-align="center"
         label="订阅量"
         prop="sub_count"
+        width="200px"
       ></el-table-column>
       <el-table-column
         align="center"
         header-align="center"
         label="状态"
-        width="80px"
+        width="200px"
       >
         <template #default="{ row }">
           <el-tag v-if="row.status" type="success">已上架</el-tag>
@@ -242,7 +249,7 @@ getListData()
         align="center"
         header-align="center"
         label="创建时间"
-        min-width="160px"
+        width="260px"
       >
         <template #default="{ row }">
           <div class="whitespace-nowrap">
@@ -255,30 +262,33 @@ getListData()
         header-align="center"
         label="操作"
         fixed="right"
-        min-width="90px"
       >
         <template #default="{ row }">
-          <el-row>
-            <el-col :span="24" :md="8">
-              <el-button
-                :type="!!row.status ? 'warning' : 'success'"
-                plain
-                @click="handleState(row)"
-                :loading="row.editLoading"
-                >{{ !!row.status ? '下架' : '上架' }}</el-button
-              ></el-col
+          <el-space wrap class="text-center">
+            <el-button
+              class="ml-2"
+              :type="!!row.status ? 'warning' : 'success'"
+              plain
+              @click="handleState(row)"
+              :loading="row.editLoading"
+              >{{ !!row.status ? '下架' : '上架' }}</el-button
             >
-            <el-col :span="24" :md="8" class="my-1 md:my-0"
-              ><el-button type="primary" plain @click="handleEdit(row)">
-                编辑
-              </el-button></el-col
+            <el-button
+              class="ml-2"
+              type="primary"
+              plain
+              @click="handleEdit(row)"
             >
-            <el-col :span="24" :md="8">
-              <el-button type="danger" plain @click="handleDelete(row)"
-                >删除</el-button
-              ></el-col
+              编辑
+            </el-button>
+            <el-button
+              class="ml-2"
+              type="danger"
+              plain
+              @click="handleDelete(row)"
+              >删除</el-button
             >
-          </el-row>
+          </el-space>
         </template>
       </el-table-column>
     </el-table>
