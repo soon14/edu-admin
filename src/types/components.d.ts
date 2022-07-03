@@ -45,11 +45,13 @@ declare module '@vue/runtime-core' {
     ElTabs: typeof import('element-plus/es')['ElTabs']
     ElTag: typeof import('element-plus/es')['ElTag']
     ElTooltip: typeof import('element-plus/es')['ElTooltip']
+    ElTree: typeof import('element-plus/es')['ElTree']
     Loading: typeof import('element-plus/es')['ElLoadingDirective']
     Pagination: typeof import('./../components/pagination/index.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     SendCode: typeof import('./../components/send-code/index.vue')['default']
+    Tree: typeof import('./../components/tree/index.vue')['default']
   }
 }
 

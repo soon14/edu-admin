@@ -39,10 +39,10 @@ html.dark {
     color: var(--el-color-primary);
     transition: all 0.2s;
     border-color: var(--el-color-primary-light-3);
-    &:hover{
+    &:hover {
       border-color: var(--el-color-primary);
     }
-    &:active{
+    &:active {
       border-color: var(--el-color-primary);
       background-color: var(--el-color-primary-light-7);
     }
@@ -52,10 +52,10 @@ html.dark {
     color: var(--el-color-danger);
     transition: all 0.2s;
     border-color: var(--el-color-danger-light-3);
-    &:hover{
+    &:hover {
       border-color: var(--el-color-danger);
     }
-    &:active{
+    &:active {
       border-color: var(--el-color-danger);
       background-color: var(--el-color-danger-light-7);
     }
@@ -65,10 +65,10 @@ html.dark {
     color: var(--el-color-warning);
     transition: all 0.2s;
     border-color: var(--el-color-warning-light-3);
-    &:hover{
+    &:hover {
       border-color: var(--el-color-warning);
     }
-    &:active{
+    &:active {
       border-color: var(--el-color-warning);
       background-color: var(--el-color-warning-light-7);
     }
@@ -78,16 +78,16 @@ html.dark {
     color: var(--el-color-success);
     transition: all 0.2s;
     border-color: var(--el-color-success-light-3);
-    &:hover{
+    &:hover {
       border-color: var(--el-color-success);
     }
-    &:active{
+    &:active {
       border-color: var(--el-color-success);
       background-color: var(--el-color-success-light-7);
     }
   }
-  .el-table th.el-table__cell, .el-table-fixed-column--right{
+  .el-table th.el-table__cell,
+  .el-table-fixed-column--right {
     background: var(--el-bg-color-overlay) !important;
   }
-
 }

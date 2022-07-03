@@ -58,7 +58,6 @@ const data = ref([
     ]
   }
 ])
-const defaultExpandedKeys = computed(() => data.value.map((it) => it.id))
 const defaultProps = {
   children: 'children',
   label: (data: any) => data.label || data.name
@@ -125,30 +124,12 @@ onMounted(() => {
       @node-drop="handleNodeDrop"
       @check="handleCheck"
       draggable
+      default-expand-all
       node-key="id"
       show-checkbox
-      :indent="20"
-      :default-expanded-keys="defaultExpandedKeys"
-    >
-      <template #default="{ node }">
-        <div class="inner w-full flex justify-between">
-          <span class="flex items-center">{{
-            node.data.label || node.data.name
-          }}</span>
-          <div>
-            <el-button class="mr-4">删除</el-button>
-            <el-button class="mr-4">编辑</el-button>
-          </div>
-        </div>
-      </template>
-    </el-tree>
+    />
     <el-button type="primary" @click="handleGetKeys">获取选中</el-button>
   </el-card>
 </template>
 
-<style scoped lang="scss">
-:deep(.el-tree-node__content) {
-  padding: 20px 0;
-  @apply border-b-1 border-gray-600;
-}
-</style>
+<style scoped lang="scss"></style>

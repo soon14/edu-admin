@@ -108,14 +108,15 @@ const handleState = async (row: ICourseResponse) => {
       price: parseFloat(row.price),
       t_price: parseFloat(row.t_price)
     })
+  } catch (err) {
   } finally {
     row.editLoading = false
   }
-  await getListData()
   ElMessage({
     type: row.status ? 'warning' : 'success',
     message: row.status ? '已下架' : '上架成功'
   })
+  await getListData()
 }
 const handleDelete = (row: ICourseResponse) => {
   const title = `是否删除标题为 ${row.title} 的图文吗?`
@@ -168,7 +169,7 @@ getListData()
             ></el-col
           >
           <el-col :span="24" :md="12">
-            <div class="flex md:justify-end mt-2 md:mt-0">
+            <div class="flex lg:justify-end mt-2 lg:mt-0">
               <el-select
                 class="w-88px"
                 v-model="queryParams.status"
@@ -212,9 +213,9 @@ getListData()
         header-align="center"
         label="#"
         prop="custom_index"
-        width="50px"
+        width="100px"
       ></el-table-column>
-      <el-table-column label="图文内容">
+      <el-table-column label="图文内容" width="400px">
         <template #default="{ row }">
           <div class="course-graphics">
             <div class="course-cover">
@@ -245,12 +246,7 @@ getListData()
           <el-tag v-else type="warning">已下架</el-tag>
         </template>
       </el-table-column>
-      <el-table-column
-        align="center"
-        header-align="center"
-        label="创建时间"
-        width="260px"
-      >
+      <el-table-column align="center" header-align="center" label="创建时间">
         <template #default="{ row }">
           <div class="whitespace-nowrap">
             {{ formatDate(row.created_time) }}
@@ -267,10 +263,10 @@ getListData()
           <el-space wrap class="text-center">
             <el-button
               class="ml-2"
-              :type="!!row.status ? 'warning' : 'success'"
+              :type="!!row.status ? 'info' : 'success'"
               plain
               @click="handleState(row)"
-              :loading="row.editLoading"
+              :disabled="row.editLoading"
               >{{ !!row.status ? '下架' : '上架' }}</el-button
             >
             <el-button

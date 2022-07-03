@@ -1,88 +1,86 @@
-<!--
-  使用包:
-  npm i @wangeditor/editor @wangeditor/editor-for-vue@next
-  文档: https://www.wangeditor.com/v5/installation.html#npm
- -->
 <script setup lang="ts">
-import '@wangeditor/editor/dist/css/style.css' // 引入 css
-import { onBeforeUnmount, ref, shallowRef, onMounted } from 'vue'
-import { Editor, Toolbar } from '@wangeditor/editor-for-vue'
-import { IEditorConfig } from '@wangeditor/core'
-type InsertFnType = (url: string, alt: string, href: string) => void
+import type { InsertFnType } from './types/editor'
+import '@wangeditor/editor/dist/css/style.css'
+import {
+  createEditor,
+  createToolbar,
+  IEditorConfig,
+  IDomEditor,
+  IToolbarConfig,
+  Toolbar
+} from '@wangeditor/editor'
 
-// 编辑器实例，必须用 shallowRef
-const editorRef = shallowRef()
-
-// 内容 HTML
-const valueHtml = ref('<p>hello</p>')
-
-// 模拟 ajax 异步获取内容
-onMounted(() => {
-  setTimeout(() => {
-    valueHtml.value = '<p>模拟 Ajax 异步设置内容</p>'
-  }, 1500)
+const props = defineProps({
+  modelValue: {
+    type: String,
+    default: ''
+  }
 })
+const emit = defineEmits<{
+  (e: 'update:modelValue', value: string): void
+}>()
+let editor: IDomEditor, toolbar: Toolbar
 
-const toolbarConfig = {}
+// 编辑器配置
 const editorConfig: Partial<IEditorConfig> = {
-  placeholder: '请输入内容...',
   MENU_CONF: {
     uploadImage: {
-      // 自定义插入图片
-      customUpload(file: File, insertFn: InsertFnType) {
-        const formData = new FormData()
-        formData.append('file', file)
-        fetch('http://127.0.0.1:8888/api/upload', {
-          method: 'POST',
-          body: formData
-        })
-          .then((res) => {
-            return res.json()
-          })
-          .then((res) => {
-            insertFn(`http://127.0.0.1:8888/${res.data}`, '', '')
-          })
+      // 自定义上传
+      async customUpload(file: File, insertFn: InsertFnType) {
+        // file 即选中的文件
+        console.log(file)
+        // 自己实现上传，并得到图片 url alt href
+        // 最后插入图片
+        // insertFn(url, alt, href)
+        insertFn(
+          'https://images.unsplash.com/photo-1599420186946-7b6fb4e297f0?ixlib=rb-1.2.1&ixid=MnwxMjA3fDF8MHxlZGl0b3JpYWwtZmVlZHwxfHx8ZW58MHx8fHw%3D&auto=format&fit=crop&w=800&q=60',
+          '',
+          ''
+        )
       }
     }
   }
 }
-
-const mode = 'default'
-// 组件销毁时，也及时销毁编辑器
-onBeforeUnmount(() => {
-  const editor = editorRef.value
-  if (editor == null) return
-  editor.destroy()
-})
-
-const handleCreated = (editor: string) => {
-  editorRef.value = editor // 记录 editor 实例，重要！
+editorConfig.placeholder = '请输入内容'
+editorConfig.onChange = (editor: IDomEditor) => {
+  // 当编辑器选区、内容变化时，即触发
+  // console.log('content', editor.children)
+  // console.log('html', editor.getHtml())
+  emit('update:modelValue', editor.getHtml())
 }
+
+const init = () => {
+  // 工具栏配置
+  const toolbarConfig: Partial<IToolbarConfig> = {}
+  // 创建编辑器
+  editor = createEditor({
+    selector: '#editor-container',
+    config: editorConfig,
+    mode: 'default', // 或 'simple'
+    html: props.modelValue
+  })
+  // 创建工具栏
+  toolbar = createToolbar({
+    editor,
+    selector: '#toolbar-container',
+    config: toolbarConfig,
+    mode: 'default' // 或 'simple'
+  })
+}
+onMounted(() => {
+  init()
+})
+onBeforeUnmount(() => {
+  editor.destroy()
+  toolbar.destroy()
+})
 </script>
 
 <template>
-  <div class="">
-    <div style="border: 1px solid #ccc">
-      <Toolbar
-        style="border-bottom: 1px solid #ccc"
-        :editor="editorRef"
-        :default-config="toolbarConfig"
-        :mode="mode"
-      />
-      <Editor
-        style="height: 500px; overflow-y: hidden"
-        v-model="valueHtml"
-        :default-config="editorConfig"
-        :mode="mode"
-        @onCreated="handleCreated"
-      />
-    </div>
+  <div>
+    <div id="toolbar-container"></div>
+    <div id="editor-container" class="h-xl"></div>
   </div>
 </template>
 
 <style scoped lang="scss"></style>
-<script lang="ts">
-export default {
-  name: 'Editor'
-}
-</script>
