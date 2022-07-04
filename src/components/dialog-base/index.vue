@@ -52,12 +52,13 @@ const handleConfirm = () => {
       v-model="dialogVisible"
       append-to-body
       destroy-on-close
+      width="70%"
       :fullscreen="fullScreen"
       :close-on-click-modal="false"
       v-bind="$attrs"
       @close="handleClose"
     >
-      <el-scrollbar>
+      <el-scrollbar height="60vh">
         <slot></slot>
       </el-scrollbar>
       <template #footer>

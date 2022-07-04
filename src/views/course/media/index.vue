@@ -313,10 +313,10 @@ getListData()
           <el-input v-model="formData.title"></el-input>
         </el-form-item>
         <el-form-item label="试看内容" prop="try">
-          <el-input v-model="formData.try"></el-input>
+          <Editor v-model="formData.try" />
         </el-form-item>
         <el-form-item label="课程内容" prop="content">
-          <el-input v-model="formData.content"></el-input>
+          <Editor v-model="formData.content" />
         </el-form-item>
         <el-form-item label="课程价格" prop="price">
           <el-input-number

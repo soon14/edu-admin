@@ -14,6 +14,10 @@ const props = defineProps({
   modelValue: {
     type: String,
     default: ''
+  },
+  height: {
+    type: Number,
+    default: 400
   }
 })
 const emit = defineEmits<{
@@ -48,13 +52,14 @@ editorConfig.onChange = (editor: IDomEditor) => {
   // console.log('html', editor.getHtml())
   emit('update:modelValue', editor.getHtml())
 }
-
+const editorRef = ref<any>(null)
+const toolbarRef = ref<any>(null)
 const init = () => {
   // 工具栏配置
   const toolbarConfig: Partial<IToolbarConfig> = {}
   // 创建编辑器
   editor = createEditor({
-    selector: '#editor-container',
+    selector: editorRef.value,
     config: editorConfig,
     mode: 'default', // 或 'simple'
     html: props.modelValue
@@ -62,24 +67,31 @@ const init = () => {
   // 创建工具栏
   toolbar = createToolbar({
     editor,
-    selector: '#toolbar-container',
+    selector: toolbarRef.value,
     config: toolbarConfig,
     mode: 'default' // 或 'simple'
   })
 }
 onMounted(() => {
   init()
+  setTimeout(() => {
+    editor.setHtml(props.modelValue)
+  }, 0)
 })
 onBeforeUnmount(() => {
-  editor.destroy()
-  toolbar.destroy()
+  editor && editor.destroy()
+  toolbar && toolbar.destroy()
 })
 </script>
 
 <template>
   <div>
-    <div id="toolbar-container"></div>
-    <div id="editor-container" class="h-xl"></div>
+    <div id="toolbar-container" ref="toolbarRef"></div>
+    <div
+      id="editor-container"
+      ref="editorRef"
+      :style="{ height: height + 'px' }"
+    ></div>
   </div>
 </template>
 
