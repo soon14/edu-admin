@@ -95,13 +95,16 @@ watch(
       <template v-for="(item, index) in columns" :key="index">
         <el-table-column v-bind="item" v-if="item.type === 'action_btn'">
           <template #default="{ row }">
-            <el-button
-              :type="btn.type"
-              v-for="(btn, bIndex) in item?.btns"
-              :key="bIndex"
-              @click="btn.handle(row)"
-              >{{ btn.name }}</el-button
-            >
+            <el-space wrap>
+              <el-button
+                :size="btn.size"
+                :type="btn.type"
+                v-for="(btn, bIndex) in item?.btns"
+                :key="bIndex"
+                @click="btn.handle(row)"
+                >{{ btn.name }}</el-button
+              >
+            </el-space>
           </template>
         </el-table-column>
         <el-table-column v-bind="item" v-else-if="item.type == 'time'">

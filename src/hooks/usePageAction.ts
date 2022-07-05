@@ -83,8 +83,7 @@ export default <T = any>({
     }
     await getListData()
   }
-  const handleSearch = (e?: Event) => {
-    e?.preventDefault()
+  const searchData = () => {
     queryParams.value.page = 1
     getListData()
   }
@@ -97,6 +96,6 @@ export default <T = any>({
     createData,
     updateData,
     updateStateData,
-    handleSearch
+    searchData
   }
 }

@@ -55,8 +55,9 @@ const handleConfirm = () => {
 const handleClose = () => {
   formRef.value?.resetFields()
 }
-const open = (row?: ICourseRequest) => {
+const open = (title: string, row?: ICourseRequest) => {
   visible.value = true
+  dialogTitle.value = title
   nextTick(() => {
     if (row && row.id) {
       formData.value = cloneDeep({

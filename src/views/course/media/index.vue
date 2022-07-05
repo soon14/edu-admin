@@ -4,11 +4,10 @@ import {
   ICourseListRequest,
   ICourseRequest
 } from '@/api/module/types/course'
-
+import PageSearch from '@/components/page-search/index.vue'
 import EditDialog from './components/edit-dialog.vue'
 import usePageAction from '@/hooks/usePageAction'
-import { IColumn } from '@/components/page-table/types'
-
+import useTableColumns from './config/useTableColumns'
 const stateOptions = ref([
   { label: '全部', value: '' },
   { label: '已上架', value: 1 },
@@ -29,7 +28,7 @@ const {
   getListData,
   deleteData,
   updateStateData,
-  handleSearch
+  searchData
 } = usePageAction<ICourseResponse>({ queryParams, module: 'media' })
 const editDialogRef = ref<InstanceType<typeof EditDialog> | null>(null)
 
@@ -41,93 +40,35 @@ const handleDelete = (row: ICourseResponse) => {
   deleteData(row, title)
 }
 const handleCreated = () => {
-  editDialogRef.value?.open()
+  editDialogRef.value?.open('新建图文')
 }
 const handleEdit = (row: ICourseRequest) => {
-  editDialogRef.value?.open(row)
+  editDialogRef.value?.open('编辑图文', row)
 }
-const columns: IColumn[] = [
-  {
-    label: '#',
-    prop: 'custom_index',
-    width: '100'
-  },
-  {
-    label: '图文内容',
-    slot: 'media',
-    width: '250'
-  },
-  {
-    label: '订阅量',
-    prop: 'sub_count',
-    width: '150'
-  },
-  {
-    label: '状态',
-    slot: 'status'
-  },
-  {
-    label: '创建时间',
-    prop: 'created_time',
-    type: 'time',
-    width: '200'
-  },
-  {
-    label: '操作',
-    type: 'action_btn',
-    btns: [
-      { name: '编辑', type: 'primary', handle: handleEdit },
-      { name: '删除', type: 'danger', handle: handleDelete }
-    ]
-  }
-]
+const handleSearch = (searchObj: any) => {
+  queryParams.value.status = searchObj.selected
+  queryParams.value.title = searchObj.search
+  searchData()
+}
+const columns = useTableColumns({ handleDelete, handleEdit })
+
 getListData()
 </script>
-
 <template>
   <el-card class="md:m-4 media" shadow="never">
-    <div class="media-header mb-4">
-      <el-form @submit="handleSearch">
-        <el-row>
-          <el-col :span="24" :md="12"
-            ><el-button type="primary" :loading="loading" @click="handleCreated"
-              >新增图文</el-button
-            ></el-col
-          >
-          <el-col :span="24" :md="12">
-            <div class="flex lg:justify-end mt-2 lg:mt-0">
-              <el-select
-                class="w-88px"
-                v-model="queryParams.status"
-                placeholder="请选择状态"
-              >
-                <el-option
-                  v-for="item in stateOptions"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value"
-                >
-                </el-option>
-              </el-select>
-              <el-input
-                class="w-150px md:w-240px mx-2"
-                v-model="queryParams.title"
-                type="text"
-                clearable
-                placeholder="标题"
-              ></el-input>
-              <el-button
-                type="primary"
-                plain
-                :loading="loading"
-                native-type="submit"
-                >搜索</el-button
-              >
-            </div>
-          </el-col>
-        </el-row>
-      </el-form>
-    </div>
+    <PageSearch
+      @submit="handleSearch"
+      :model="queryParams"
+      :select-options="stateOptions"
+      show-search
+      show-select
+    >
+      <template #left>
+        <el-button type="primary" :loading="loading" @click="handleCreated"
+          >新增图文</el-button
+        >
+      </template>
+    </PageSearch>
     <PageTable
       :columns="columns"
       :list="list"
