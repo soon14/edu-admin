@@ -65,19 +65,21 @@ export default <T = any>({
   // editLoading 会增加 editLoading 状态字段
   // msg: ['已下架', '上架成功']
   const updateStateData = async (row: any, msg: [string, string]) => {
-    row.editLoading = true
+    row.stateLoading = true
     try {
       await ($api[module] as any)[UPDATE_STATE_API]({
         id: row.id,
-        status: row.status === 1 ? 0 : 1
+        status: row.status
       })
-      ElMessage({
-        type: row.status ? 'warning' : 'success',
-        message: row.status ? msg[1] : msg[0]
-      })
+      setTimeout(() => {
+        ElMessage({
+          type: row.status ? 'success' : 'warning',
+          message: row.status ? msg[1] : msg[0]
+        })
+      }, 500)
     } catch (err) {
     } finally {
-      row.editLoading = false
+      row.stateLoading = false
     }
     await getListData()
   }

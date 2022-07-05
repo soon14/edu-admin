@@ -27,7 +27,7 @@ export interface ICourseResponse {
   updated_time: string
   created_time: string
   custom_index?: number
-  editLoading?: boolean
+  stateLoading?: boolean
 }
 export interface ICourseListRequest {
   page: number

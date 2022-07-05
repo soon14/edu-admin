@@ -5,9 +5,9 @@ import {
   ICourseRequest
 } from '@/api/module/types/course'
 
-import { formatDate } from '@/utils/date'
 import EditDialog from './components/edit-dialog.vue'
 import usePageAction from '@/hooks/usePageAction'
+import { IColumn } from '@/components/page-table/types'
 
 const stateOptions = ref([
   { label: '全部', value: '' },
@@ -46,6 +46,41 @@ const handleCreated = () => {
 const handleEdit = (row: ICourseRequest) => {
   editDialogRef.value?.open(row)
 }
+const columns: IColumn[] = [
+  {
+    label: '#',
+    prop: 'custom_index',
+    width: '100'
+  },
+  {
+    label: '图文内容',
+    slot: 'media',
+    width: '250'
+  },
+  {
+    label: '订阅量',
+    prop: 'sub_count',
+    width: '150'
+  },
+  {
+    label: '状态',
+    slot: 'status'
+  },
+  {
+    label: '创建时间',
+    prop: 'created_time',
+    type: 'time',
+    width: '200'
+  },
+  {
+    label: '操作',
+    type: 'action_btn',
+    btns: [
+      { name: '编辑', type: 'primary', handle: handleEdit },
+      { name: '删除', type: 'danger', handle: handleDelete }
+    ]
+  }
+]
 getListData()
 </script>
 
@@ -93,98 +128,36 @@ getListData()
         </el-row>
       </el-form>
     </div>
-    <el-table
-      :data="list"
-      v-loading="loading"
-      class="w-full"
-      table-layout="auto"
-    >
-      <el-table-column
-        align="center"
-        header-align="center"
-        label="#"
-        prop="custom_index"
-        width="100px"
-      ></el-table-column>
-      <el-table-column label="图文内容" width="400px">
-        <template #default="{ row }">
-          <div class="course-graphics">
-            <div class="course-cover">
-              <img :src="row.cover || '/img_default.svg'" alt="" />
-            </div>
-            <div class="course-desc">
-              <div class="course-title">{{ row.title }}</div>
-              <div class="course-price">{{ row.price }}</div>
-            </div>
-          </div>
-        </template>
-      </el-table-column>
-      <el-table-column
-        align="center"
-        header-align="center"
-        label="订阅量"
-        prop="sub_count"
-        width="200px"
-      ></el-table-column>
-      <el-table-column
-        align="center"
-        header-align="center"
-        label="状态"
-        width="200px"
-      >
-        <template #default="{ row }">
-          <el-tag v-if="row.status" type="success">已上架</el-tag>
-          <el-tag v-else type="warning">已下架</el-tag>
-        </template>
-      </el-table-column>
-      <el-table-column align="center" header-align="center" label="创建时间">
-        <template #default="{ row }">
-          <div class="whitespace-nowrap">
-            {{ formatDate(row.created_time) }}
-          </div>
-        </template>
-      </el-table-column>
-      <el-table-column
-        align="center"
-        header-align="center"
-        label="操作"
-        fixed="right"
-      >
-        <template #default="{ row }">
-          <el-space wrap class="text-center">
-            <el-button
-              class="ml-2"
-              :type="!!row.status ? 'info' : 'success'"
-              plain
-              @click="handleState(row)"
-              :disabled="row.editLoading"
-              >{{ !!row.status ? '下架' : '上架' }}</el-button
-            >
-            <el-button
-              class="ml-2"
-              type="primary"
-              plain
-              @click="handleEdit(row)"
-            >
-              编辑
-            </el-button>
-            <el-button
-              class="ml-2"
-              type="danger"
-              plain
-              @click="handleDelete(row)"
-              >删除</el-button
-            >
-          </el-space>
-        </template>
-      </el-table-column>
-    </el-table>
-    <Pagination
-      v-model:currentPage="queryParams.page"
+    <PageTable
+      :columns="columns"
+      :list="list"
+      :loading="loading"
+      v-model:page="queryParams.page"
+      v-model:limit="queryParams.limit"
       v-model:total="total"
-      v-model:pageSize="queryParams.limit"
-      :get-data="getListData"
-    ></Pagination>
+      :get-list="getListData"
+    >
+      <template #media="{ row }">
+        <div class="course-graphics">
+          <div class="course-cover">
+            <img :src="row.cover || '/img_default.svg'" alt="" />
+          </div>
+          <div class="course-desc">
+            <div class="course-title">{{ row.title }}</div>
+            <div class="course-price">{{ row.price }}</div>
+          </div>
+        </div>
+      </template>
+      <template #status="{ row }">
+        <el-switch
+          v-model="row.status"
+          :disabled="row.stateLoading"
+          :inactive-value="0"
+          :active-value="1"
+          @click="handleState(row)"
+        ></el-switch>
+      </template>
+    </PageTable>
     <EditDialog ref="editDialogRef" :get-list="getListData"></EditDialog>
   </el-card>
 </template>
