@@ -3,14 +3,12 @@ import mediaApi from '@/api/module/media'
 import {
   ICourseResponse,
   ICourseListRequest,
-  ICourseDeleteRequest,
   ICourseRequest
 } from '@/api/module/types/course'
-import { ApiEnum } from '@/constants/fetch'
-import { ElFormType } from '@/types/element-plus'
+import { DELETE_API, LIST_API, UPDATE_STATE_API } from '@/constants/fetch'
+
 import { formatDate } from '@/utils/date'
-import { FormRules } from 'element-plus'
-import { cloneDeep } from '@/utils/lodash/'
+import EditDialog from './components/edit-dialog.vue'
 
 // 查
 const queryParams = ref<ICourseListRequest>({
@@ -23,31 +21,18 @@ const queryParams = ref<ICourseListRequest>({
 const list = ref<ICourseResponse[]>([])
 const total = ref(0)
 const loading = ref(false)
-const dialogValidate = ref(false)
-const dialogTitle = ref('')
-const formData = ref<ICourseRequest & { id?: number | null }>({
-  id: null,
-  content: '',
-  cover: '',
-  price: 0,
-  t_price: 0,
-  status: 1,
-  title: '',
-  try: '',
-  type: 'media'
-})
-const rules: FormRules = {}
+const editDialogRef = ref<InstanceType<typeof EditDialog> | null>(null)
+
 const stateOptions = ref([
   { label: '全部', value: '' },
   { label: '已上架', value: 1 },
   { label: '已下架', value: 0 }
 ])
-const formRef = ref<ElFormType | null>(null)
-const formLoading = ref(false)
+
 const getListData = async () => {
   loading.value = true
   try {
-    const fetchApi = mediaApi[ApiEnum.LIST_API]
+    const fetchApi = mediaApi[LIST_API]
     const data = await fetchApi({ ...queryParams.value })
     data.items.forEach((it, index) => {
       it.custom_index =
@@ -59,63 +44,26 @@ const getListData = async () => {
     loading.value = false
   }
 }
-// 改
-const updateData = async (item: ICourseRequest) => {
-  const fetchApi = mediaApi[ApiEnum.UPDATE_API]
-  await fetchApi(item)
-}
-// 删
-const deleteData = async (params: ICourseDeleteRequest) => {
-  loading.value = true
-  try {
-    const fetchApi = mediaApi[ApiEnum.DELETE_API]
-    await fetchApi(params)
-  } finally {
-    loading.value = false
-  }
-}
-// 增
-const createData = async (item: ICourseRequest) => {
-  const fetchApi = mediaApi[ApiEnum.CREATE_API]
-  await fetchApi(item)
-}
 const handleSearch = (e: Event) => {
   e.preventDefault()
   queryParams.value.page = 1
   getListData()
 }
-const handleCreated = () => {
-  dialogTitle.value = '新增图文'
-  dialogValidate.value = true
-}
-const handleEdit = (row: ICourseResponse) => {
-  dialogTitle.value = '编辑图文'
-  dialogValidate.value = true
-  nextTick(() => {
-    formData.value = cloneDeep({
-      ...row,
-      price: parseFloat(row.price),
-      t_price: parseFloat(row.t_price)
-    })
-  })
-}
 const handleState = async (row: ICourseResponse) => {
   row.editLoading = true
   try {
-    await updateData({
-      ...row,
-      status: row.status === 1 ? 0 : 1,
-      price: parseFloat(row.price),
-      t_price: parseFloat(row.t_price)
+    await mediaApi[UPDATE_STATE_API]({
+      id: row.id,
+      status: row.status === 1 ? 0 : 1
+    })
+    ElMessage({
+      type: row.status ? 'warning' : 'success',
+      message: row.status ? '已下架' : '上架成功'
     })
   } catch (err) {
   } finally {
     row.editLoading = false
   }
-  ElMessage({
-    type: row.status ? 'warning' : 'success',
-    message: row.status ? '已下架' : '上架成功'
-  })
   await getListData()
 }
 const handleDelete = (row: ICourseResponse) => {
@@ -125,35 +73,26 @@ const handleDelete = (row: ICourseResponse) => {
     confirmButtonText: '确定',
     cancelButtonText: '取消'
   }).then(async () => {
-    await deleteData({ ids: [row.id] })
-    ElMessage({
-      type: 'success',
-      message: '删除成功',
-      duration: 1500
-    })
+    loading.value = true
+    try {
+      const fetchApi = mediaApi[DELETE_API]
+      await fetchApi({ ids: [row.id] })
+      ElMessage({
+        type: 'success',
+        message: '删除成功',
+        duration: 1500
+      })
+    } finally {
+      loading.value = false
+    }
     await getListData()
   })
 }
-const handleConfirm = async () => {
-  formLoading.value = true
-  try {
-    if (formData.value.id) {
-      await updateData({ ...formData.value })
-    } else {
-      await createData({ ...formData.value })
-    }
-  } finally {
-    formLoading.value = false
-  }
-  ElMessage({
-    type: 'success',
-    message: formData.value.id ? '编辑成功' : '新增成功'
-  })
-  dialogValidate.value = false
-  await getListData()
+const handleCreated = () => {
+  editDialogRef.value?.open()
 }
-const handleClose = () => {
-  formRef.value?.resetFields()
+const handleEdit = (row: ICourseRequest) => {
+  editDialogRef.value?.open(row)
 }
 getListData()
 </script>
@@ -294,52 +233,7 @@ getListData()
       v-model:pageSize="queryParams.limit"
       :get-data="getListData"
     ></Pagination>
-    <DialogBase
-      :loading="formLoading"
-      v-model="dialogValidate"
-      :title="dialogTitle"
-      show-btn
-      @confirm="handleConfirm"
-      @close="handleClose"
-    >
-      <el-form
-        ref="formRef"
-        :model="formData"
-        :rules="rules"
-        label-width="80px"
-        size="default"
-      >
-        <el-form-item label="标题" prop="title">
-          <el-input v-model="formData.title"></el-input>
-        </el-form-item>
-        <el-form-item label="试看内容" prop="try">
-          <Editor v-model="formData.try" />
-        </el-form-item>
-        <el-form-item label="课程内容" prop="content">
-          <Editor v-model="formData.content" />
-        </el-form-item>
-        <el-form-item label="课程价格" prop="price">
-          <el-input-number
-            v-model="formData.price"
-            :min="0"
-            :precision="2"
-          ></el-input-number>
-        </el-form-item>
-        <el-form-item label="划线价格" prop="t_price">
-          <el-input-number
-            v-model="formData.t_price"
-            :min="0"
-            :precision="2"
-          ></el-input-number>
-        </el-form-item>
-        <el-form-item label="状态" prop="status">
-          <el-radio-group v-model="formData.status">
-            <el-radio :label="0">下架</el-radio>
-            <el-radio :label="1">上架</el-radio>
-          </el-radio-group>
-        </el-form-item>
-      </el-form>
-    </DialogBase>
+    <EditDialog ref="editDialogRef" :get-list="getListData"></EditDialog>
   </el-card>
 </template>
 

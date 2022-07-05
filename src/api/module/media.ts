@@ -1,4 +1,10 @@
-import { ApiEnum } from '@/constants/fetch'
+import {
+  CREATE_API,
+  DELETE_API,
+  LIST_API,
+  UPDATE_API,
+  UPDATE_STATE_API
+} from '@/constants/fetch'
 import request from '@/utils/axios'
 import {
   ICourseListRequest,
@@ -11,35 +17,35 @@ import {
 
 export default {
   // 创建课程
-  [ApiEnum.CREATE_API](data: ICourseRequest) {
+  [CREATE_API](data: ICourseRequest) {
     return request.post<ICourseResponse>({
       url: '/admin/s/course/save',
       data
     })
   },
   // 更新课程
-  [ApiEnum.UPDATE_API](data: ICourseRequest) {
+  [UPDATE_API](data: ICourseRequest) {
     return request.post<ICourseResponse>({
       url: '/admin/s/course/update',
       data
     })
   },
   // 课程列表
-  [ApiEnum.LIST_API](params: ICourseListRequest) {
+  [LIST_API](params: ICourseListRequest) {
     return request.get<ICourseListResponse>({
       url: '/admin/s/course',
       params
     })
   },
   // 删除课程
-  [ApiEnum.DELETE_API](data: ICourseDeleteRequest) {
+  [DELETE_API](data: ICourseDeleteRequest) {
     return request.post({
       url: '/admin/s/course/delete',
       data
     })
   },
   // 上架/下架课程
-  [ApiEnum.UPDATE_STATE_API](data: ICourseUpdateStateRequest) {
+  [UPDATE_STATE_API](data: ICourseUpdateStateRequest) {
     return request.post<ICourseResponse>({
       url: '/admin/s/course/updatestatus',
       data

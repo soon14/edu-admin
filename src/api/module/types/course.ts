@@ -44,6 +44,6 @@ export interface ICourseDeleteRequest {
   ids: number[]
 }
 export interface ICourseUpdateStateRequest {
-  ids: number
+  id: number
   status: courseStatusType
 }

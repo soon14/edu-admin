@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import commonApi from '@/api/module/common'
-import { ApiEnum } from '@/constants/fetch'
+import { UPLOAD_API } from '@/constants/fetch'
 import { UploadProps } from 'element-plus'
 
 const props = defineProps({
@@ -29,7 +29,7 @@ const customUpload = async (e: any) => {
   const formData = new FormData()
   formData.append('file', e.file)
   try {
-    const data = await commonApi[ApiEnum.UPLOAD_API]({
+    const data = await commonApi[UPLOAD_API]({
       data: formData,
       onUploadProgress(progressEvent: ProgressEvent) {
         percentage.value = Math.floor(

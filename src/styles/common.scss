@@ -34,6 +34,9 @@ html.light {
   @apply border-none;
 }
 html.dark {
+  --w-e-textarea-bg-color: #333;
+  --w-e-textarea-color: #fff;
+  /* ...其他... */
   .el-button--primary {
     background-color: var(--el-color-primary-light-9);
     color: var(--el-color-primary);

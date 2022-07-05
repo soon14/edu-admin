@@ -20,9 +20,15 @@ const isShowProgress = computed(() => {
   return !imageUrl.value && percentage.value !== 100 && percentage.value !== 0
 })
 
-watch([() => props.modelValue, imageUrl], () => {
+watch(imageUrl, () => {
   emit('update:modelValue', imageUrl.value)
 })
+watch(
+  () => props.modelValue,
+  () => {
+    imageUrl.value = props.modelValue
+  }
+)
 
 const handleClick = () => {
   inputRef.value.click()
@@ -87,7 +93,7 @@ function base64ImgToFile(dataUrl: string, filename = 'file') {
   <div class="upload-crop">
     <div class="upload-crop-inner" @click="handleClick">
       <div @click="handleClick" v-if="!imageUrl && percentage === 0">+</div>
-      <div v-if="imageUrl">
+      <div v-if="imageUrl" class="upload-crop-preview-box">
         <img class="upload-crop-preview-img" :src="imageUrl" alt="" />
       </div>
       <el-progress
@@ -122,10 +128,14 @@ function base64ImgToFile(dataUrl: string, filename = 'file') {
   width: 150px;
   height: 150px;
   border: 1px solid;
-  .upload-crop-preview-img {
+  .upload-crop-preview-box {
     width: 100%;
     height: 100%;
-    display: block;
+    object-fit: cover;
+    .upload-crop-preview-img {
+      width: 100%;
+      display: block;
+    }
   }
 }
 .upload-crop-input {
