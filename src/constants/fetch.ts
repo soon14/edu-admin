@@ -23,3 +23,5 @@ export const INFO_API = 'INFO_API'
 export const UPDATE_STATE_API = 'UPDATE_STATE_API'
 // 上传
 export const UPLOAD_API = 'UPLOAD_API'
+// 排序
+export const SORT_API = 'SORT_API'
