@@ -30,7 +30,7 @@ export interface IColumnUpdateStateRequest {
 }
 export interface IColumnUpdateSendStateRequest {
   id: number
-  status: sendType
+  isend: sendType
 }
 export interface IColumnDescResponse {
   id: number

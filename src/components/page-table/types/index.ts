@@ -1,6 +1,6 @@
 import { ElTableColumn, ButtonType, ButtonProps } from 'element-plus'
 type IElTableColumn = InstanceType<typeof ElTableColumn>
-type columnType = 'time' | 'action_btn'
+type columnType = 'time' | 'action_btn' | 'index' | 'selection'
 
 interface IBtn {
   name: string

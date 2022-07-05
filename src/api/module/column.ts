@@ -47,7 +47,7 @@ export default {
     })
   },
   // 上架/下架专栏
-  [UPDATE_STATE_API](data: IColumnUpdateStateRequest) {
+  updateColumnStateApi(data: IColumnUpdateStateRequest) {
     return request.post({
       url: '/admin/s/column/updatestatus',
       data

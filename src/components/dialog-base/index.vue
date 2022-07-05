@@ -63,12 +63,15 @@ const handleConfirm = () => {
       </el-scrollbar>
       <template #footer>
         <slot name="footer" v-if="showBtn">
-          <el-button type="info" @click="handleClose">取消</el-button>
+          <el-button type="info" @click="handleClose" :loading="loading"
+            >取消</el-button
+          >
           <el-button type="primary" @click="handleConfirm" :loading="loading"
             >确定</el-button
           >
         </slot>
       </template>
+      <slot name="append"></slot>
     </el-dialog>
   </div>
 </template>

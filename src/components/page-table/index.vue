@@ -2,6 +2,7 @@
 import { PropType } from 'vue'
 import { formatDate } from '@/utils/date'
 import { IColumn } from './types'
+import { cloneDeep } from '@/utils/lodash'
 
 const props = defineProps({
   list: {
@@ -41,6 +42,7 @@ const emit = defineEmits<{
   (e: 'update:total', total: number): void
   (e: 'update:page', total: number): void
   (e: 'update:limit', total: number): void
+  (e: 'selectionChange', rows: any[]): void
 }>()
 const currentTotal = ref(props.total)
 const currentPage = ref(props.page)
@@ -81,6 +83,9 @@ watch(
     emit('update:limit', currentLimit.value)
   }
 )
+const handleSelectionChange = (rows: any[]) => {
+  emit('selectionChange', cloneDeep(rows))
+}
 </script>
 
 <template>
@@ -90,6 +95,7 @@ watch(
       v-loading="loading"
       class="w-full"
       table-layout="auto"
+      @selection-change="handleSelectionChange"
     >
       <slot></slot>
       <template v-for="(item, index) in columns" :key="index">
@@ -127,7 +133,7 @@ watch(
       </template>
     </el-table>
     <Pagination
-      v-if="currentLimit"
+      v-if="!!currentTotal"
       v-model:currentPage="currentPage"
       v-model:total="currentTotal"
       v-model:pageSize="currentLimit"

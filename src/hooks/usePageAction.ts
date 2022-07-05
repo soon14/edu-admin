@@ -2,6 +2,7 @@ import { $api } from '@/api'
 import {
   CREATE_API,
   DELETE_API,
+  INFO_API,
   LIST_API,
   UPDATE_API,
   UPDATE_STATE_API
@@ -33,7 +34,15 @@ export default <T = any>({
       loading.value = false
     }
   }
-  const deleteData = (row: any, title: string) => {
+  const getInfoData = async (id: number) => {
+    const fetchApi = ($api[module] as any)[INFO_API]
+    return await fetchApi(id)
+  }
+  const deleteData = (
+    row: any,
+    title: string,
+    otherParams?: Record<string, any>
+  ) => {
     ElMessageBox.confirm(title, '提示', {
       type: 'warning',
       confirmButtonText: '确定',
@@ -42,7 +51,12 @@ export default <T = any>({
       loading.value = true
       try {
         const fetchApi = ($api[module] as any)[DELETE_API]
-        await fetchApi({ ids: [row.id] })
+        let params: any = {}
+        if (otherParams) {
+          params = { ...otherParams }
+        }
+        params.ids = [row.id]
+        await fetchApi(params)
         ElMessage({
           type: 'success',
           message: '删除成功',
@@ -92,6 +106,7 @@ export default <T = any>({
     total,
     list,
     getListData,
+    getInfoData,
     deleteData,
     createData,
     updateData,

@@ -7,6 +7,7 @@ declare module '@vue/runtime-core' {
   export interface GlobalComponents {
     DialogBase: typeof import('./../components/dialog-base/index.vue')['default']
     DialogCropper: typeof import('./../components/dialog-cropper/index.vue')['default']
+    DialogSelect: typeof import('./../components/dialog-select/index.vue')['default']
     Draggable: typeof import('./../components/draggable/index.vue')['default']
     Editor: typeof import('./../components/editor/index.vue')['default']
     ElAside: typeof import('element-plus/es')['ElAside']
@@ -38,6 +39,7 @@ declare module '@vue/runtime-core' {
     ElRow: typeof import('element-plus/es')['ElRow']
     ElScrollbar: typeof import('element-plus/es')['ElScrollbar']
     ElSelect: typeof import('element-plus/es')['ElSelect']
+    ElSkeleton: typeof import('element-plus/es')['ElSkeleton']
     ElSpace: typeof import('element-plus/es')['ElSpace']
     ElSwitch: typeof import('element-plus/es')['ElSwitch']
     ElTable: typeof import('element-plus/es')['ElTable']

@@ -3,8 +3,8 @@ import { courseType } from './course'
 type statusType = 0 | 1 // 0下架 1上架
 type sendType = 0 | 1 // 0连载中 2已完结
 export interface IColumnContentsRequest {
-  column_id: number
-  course_id: number
+  column_id: number | null
+  course_id: number | null
 }
 export interface IColumnContentsSortRequest {
   ids: number[]
