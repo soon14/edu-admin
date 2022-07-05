@@ -1,7 +1,7 @@
 export type courseType = 'media' | 'audio' | 'video'
 export type courseStatusType = 0 | 1 | ''
 export interface ICourseRequest {
-  id?: number | null
+  id: number | null | undefined
   title: string
   cover: string
   try: string

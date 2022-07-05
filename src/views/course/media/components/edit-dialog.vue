@@ -1,16 +1,17 @@
 <script setup lang="ts">
 import { ElFormType } from '@/types/element-plus'
 import { ICourseRequest } from '@/api/module/types/course'
-import mediaApi from '@/api/module/media'
-import { CREATE_API, UPDATE_API } from '@/constants/fetch'
 import { rules } from './config/edit-rules'
 import { cloneDeep } from '@/utils/lodash/'
-
+import usePageAction from '@/hooks/usePageAction'
 const props = defineProps({
   getList: {
     type: Function,
     default: () => ({})
   }
+})
+const { createData, updateData } = usePageAction({
+  module: 'media'
 })
 const visible = ref(false)
 const dialogTitle = ref('')
@@ -28,16 +29,7 @@ const formData = ref<ICourseRequest>({
 
 const formRef = ref<ElFormType | null>(null)
 const formLoading = ref(false)
-// 改
-const updateData = async (item: ICourseRequest) => {
-  const fetchApi = mediaApi[UPDATE_API]
-  await fetchApi(item)
-}
-// 增
-const createData = async (item: ICourseRequest) => {
-  const fetchApi = mediaApi[CREATE_API]
-  await fetchApi(item)
-}
+
 const handleConfirm = () => {
   formRef.value?.validate(async (valid) => {
     if (valid) {
@@ -48,13 +40,13 @@ const handleConfirm = () => {
         } else {
           await createData({ ...formData.value })
         }
+        ElMessage({
+          type: 'success',
+          message: formData.value.id ? '编辑成功' : '新增成功'
+        })
       } finally {
         formLoading.value = false
       }
-      ElMessage({
-        type: 'success',
-        message: formData.value.id ? '编辑成功' : '新增成功'
-      })
       visible.value = false
       await props.getList()
     }

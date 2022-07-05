@@ -1,4 +1,4 @@
-import mediaApi from '@/api/module/media'
+import { $api } from '@/api'
 import {
   CREATE_API,
   DELETE_API,
@@ -7,17 +7,23 @@ import {
   UPDATE_STATE_API
 } from '@/constants/fetch'
 
-export default ({ queryParams }: { queryParams?: any }) => {
+export default <T = any>({
+  queryParams,
+  module
+}: {
+  queryParams?: any
+  module: string
+}) => {
   const loading = ref(false)
   const total = ref(0)
-  const list = ref<any>([])
+  const list = ref<T[]>([])
 
   const getListData = async () => {
     loading.value = true
     try {
-      const fetchApi = mediaApi[LIST_API]
+      const fetchApi = ($api[module] as any)[LIST_API]
       const data = await fetchApi({ ...queryParams.value })
-      data.items.forEach((it, index) => {
+      data.items.forEach((it: Record<string, any>, index: number) => {
         it.custom_index =
           index + queryParams.value.limit * (queryParams.value.page - 1) + 1
       })
@@ -27,8 +33,7 @@ export default ({ queryParams }: { queryParams?: any }) => {
       loading.value = false
     }
   }
-  const deleteData = (row: any) => {
-    const title = `是否删除标题为 ${row.title} 的图文吗?`
+  const deleteData = (row: any, title: string) => {
     ElMessageBox.confirm(title, '提示', {
       type: 'warning',
       confirmButtonText: '确定',
@@ -36,7 +41,7 @@ export default ({ queryParams }: { queryParams?: any }) => {
     }).then(async () => {
       loading.value = true
       try {
-        const fetchApi = mediaApi[DELETE_API]
+        const fetchApi = ($api[module] as any)[DELETE_API]
         await fetchApi({ ids: [row.id] })
         ElMessage({
           type: 'success',
@@ -50,17 +55,19 @@ export default ({ queryParams }: { queryParams?: any }) => {
     })
   }
   const createData = async (row: any) => {
-    const fetchApi = mediaApi[CREATE_API]
+    const fetchApi = ($api[module] as any)[CREATE_API]
     await fetchApi(row)
   }
   const updateData = async (row: any) => {
-    const fetchApi = mediaApi[UPDATE_API]
+    const fetchApi = ($api[module] as any)[UPDATE_API]
     await fetchApi(row)
   }
+  // editLoading 会增加 editLoading 状态字段
+  // msg: ['已下架', '上架成功']
   const updateStateData = async (row: any, msg: [string, string]) => {
     row.editLoading = true
     try {
-      await mediaApi[UPDATE_STATE_API]({
+      await ($api[module] as any)[UPDATE_STATE_API]({
         id: row.id,
         status: row.status === 1 ? 0 : 1
       })
@@ -74,6 +81,11 @@ export default ({ queryParams }: { queryParams?: any }) => {
     }
     await getListData()
   }
+  const handleSearch = (e?: Event) => {
+    e?.preventDefault()
+    queryParams.value.page = 1
+    getListData()
+  }
   return {
     loading,
     total,
@@ -82,6 +94,7 @@ export default ({ queryParams }: { queryParams?: any }) => {
     deleteData,
     createData,
     updateData,
-    updateStateData
+    updateStateData,
+    handleSearch
   }
 }

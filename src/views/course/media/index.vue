@@ -1,15 +1,19 @@
 <script setup lang="ts">
-import mediaApi from '@/api/module/media'
 import {
   ICourseResponse,
   ICourseListRequest,
   ICourseRequest
 } from '@/api/module/types/course'
-import { DELETE_API, LIST_API, UPDATE_STATE_API } from '@/constants/fetch'
 
 import { formatDate } from '@/utils/date'
 import EditDialog from './components/edit-dialog.vue'
+import usePageAction from '@/hooks/usePageAction'
 
+const stateOptions = ref([
+  { label: '全部', value: '' },
+  { label: '已上架', value: 1 },
+  { label: '已下架', value: 0 }
+])
 // 查
 const queryParams = ref<ICourseListRequest>({
   page: 1,
@@ -18,75 +22,23 @@ const queryParams = ref<ICourseListRequest>({
   status: '',
   title: ''
 })
-const list = ref<ICourseResponse[]>([])
-const total = ref(0)
-const loading = ref(false)
+const {
+  loading,
+  total,
+  list,
+  getListData,
+  deleteData,
+  updateStateData,
+  handleSearch
+} = usePageAction<ICourseResponse>({ queryParams, module: 'media' })
 const editDialogRef = ref<InstanceType<typeof EditDialog> | null>(null)
 
-const stateOptions = ref([
-  { label: '全部', value: '' },
-  { label: '已上架', value: 1 },
-  { label: '已下架', value: 0 }
-])
-
-const getListData = async () => {
-  loading.value = true
-  try {
-    const fetchApi = mediaApi[LIST_API]
-    const data = await fetchApi({ ...queryParams.value })
-    data.items.forEach((it, index) => {
-      it.custom_index =
-        index + queryParams.value.limit * (queryParams.value.page - 1) + 1
-    })
-    list.value = data.items
-    total.value = data.total
-  } finally {
-    loading.value = false
-  }
-}
-const handleSearch = (e: Event) => {
-  e.preventDefault()
-  queryParams.value.page = 1
-  getListData()
-}
 const handleState = async (row: ICourseResponse) => {
-  row.editLoading = true
-  try {
-    await mediaApi[UPDATE_STATE_API]({
-      id: row.id,
-      status: row.status === 1 ? 0 : 1
-    })
-    ElMessage({
-      type: row.status ? 'warning' : 'success',
-      message: row.status ? '已下架' : '上架成功'
-    })
-  } catch (err) {
-  } finally {
-    row.editLoading = false
-  }
-  await getListData()
+  updateStateData(row, ['已下架', '上架成功'])
 }
 const handleDelete = (row: ICourseResponse) => {
-  const title = `是否删除标题为 ${row.title} 的图文吗?`
-  ElMessageBox.confirm(title, '提示', {
-    type: 'warning',
-    confirmButtonText: '确定',
-    cancelButtonText: '取消'
-  }).then(async () => {
-    loading.value = true
-    try {
-      const fetchApi = mediaApi[DELETE_API]
-      await fetchApi({ ids: [row.id] })
-      ElMessage({
-        type: 'success',
-        message: '删除成功',
-        duration: 1500
-      })
-    } finally {
-      loading.value = false
-    }
-    await getListData()
-  })
+  const title = `是否删除标题为${row.title}的图文?`
+  deleteData(row, title)
 }
 const handleCreated = () => {
   editDialogRef.value?.open()
