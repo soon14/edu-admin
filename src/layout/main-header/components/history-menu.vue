@@ -15,7 +15,7 @@ watch(
   () => {
     if (
       !currentRoute.value.meta.title ||
-      currentRoute.value.meta.hidden ||
+      // currentRoute.value.meta.hidden ||
       currentRoute.value.meta.hiddenHistory
     )
       return

@@ -1,19 +1,133 @@
 <script setup lang="ts">
-const drawerVisible = ref(false)
-const direction = 'rtl' // rtl / ltr / ttb / btt
-const file = ref('123123.jpg')
-const handleBeforeClose = (done: any) => {
-  done()
+import {
+  IColumnDescResponse,
+  IColumnListRequest,
+  IColumnRequest
+} from '@/api/module/types/column'
+import PageSearch from '@/components/page-search/index.vue'
+import EditDialog from './components/edit-dialog.vue'
+import usePageAction from '@/hooks/usePageAction'
+import useTableColumns from './config/useTableColumns'
+const stateOptions = ref([
+  { label: '全部', value: '' },
+  { label: '已上架', value: 1 },
+  { label: '已下架', value: 0 }
+])
+// 查
+const queryParams = ref<IColumnListRequest>({
+  page: 1,
+  limit: 10,
+  status: '',
+  title: ''
+})
+const {
+  loading,
+  total,
+  list,
+  getListData,
+  deleteData,
+  updateStateData,
+  searchData
+} = usePageAction<IColumnDescResponse>({ queryParams, module: 'column' })
+const editDialogRef = ref<InstanceType<typeof EditDialog> | null>(null)
+const router = useRouter()
+const handleState = async (row: IColumnDescResponse) => {
+  updateStateData(row, ['已下架', '上架成功'])
 }
-const handleCancelClick = () => {}
-const handleConfirmClick = () => {}
-</script>
+const handleDelete = (row: IColumnDescResponse) => {
+  const title = `是否删除标题为${row.title}的图文?`
+  deleteData(row, title)
+}
+const handleCreated = () => {
+  editDialogRef.value?.open('新建专栏')
+}
+const handleEdit = (row: IColumnRequest) => {
+  editDialogRef.value?.open('编辑专栏', row)
+}
+// 进图专栏目录
+const handleToPage = (row: any) => {
+  router.push({ name: 'ColumnDetail', params: { id: row.id } })
+}
+const handleSearch = (searchObj: any) => {
+  queryParams.value.status = searchObj.selected
+  queryParams.value.title = searchObj.search
+  searchData()
+}
+const columns = useTableColumns({ handleDelete, handleEdit, handleToPage })
 
+getListData()
+</script>
 <template>
-  <el-card class="md:m-4">
-    <el-button type="primary" @click="drawerVisible = true">开启</el-button>
-    <UploadList v-model="file"></UploadList>
+  <el-card class="md:m-4 media" shadow="never">
+    <PageSearch
+      @submit="handleSearch"
+      :model="queryParams"
+      :select-options="stateOptions"
+      show-search
+      show-select
+    >
+      <template #left>
+        <el-button type="primary" :loading="loading" @click="handleCreated"
+          >新增专栏</el-button
+        >
+      </template>
+    </PageSearch>
+    <PageTable
+      :columns="columns"
+      :list="list"
+      :loading="loading"
+      v-model:page="queryParams.page"
+      v-model:limit="queryParams.limit"
+      v-model:total="total"
+      :get-list="getListData"
+    >
+      <template #media="{ row }">
+        <div class="course-graphics">
+          <div class="course-cover">
+            <img :src="row.cover || '/img_default.svg'" alt="" />
+          </div>
+          <div class="course-desc">
+            <div class="course-title">{{ row.title }}</div>
+            <div class="course-price">{{ row.price }}</div>
+          </div>
+        </div>
+      </template>
+      <template #isend="{ row }">
+        <el-tag type="info" v-if="row.isend">已完结</el-tag>
+        <el-tag type="success" v-else>连载中</el-tag>
+      </template>
+      <template #status="{ row }">
+        <el-switch
+          v-model="row.status"
+          :disabled="row.stateLoading"
+          :inactive-value="0"
+          :active-value="1"
+          @click="handleState(row)"
+        ></el-switch>
+      </template>
+    </PageTable>
+    <EditDialog ref="editDialogRef" :get-list="getListData"></EditDialog>
   </el-card>
 </template>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+.media {
+  .course-graphics {
+    @apply flex justify-center w-full;
+    .course-cover {
+      @apply w-14;
+      img {
+        @apply flex w-full;
+      }
+    }
+    .course-desc {
+      @apply flex flex-col flex-1 pl-4 justify-between text-left whitespace-nowrap;
+      .course-title {
+      }
+      .course-price {
+        @apply text-red-600;
+      }
+    }
+  }
+}
+</style>

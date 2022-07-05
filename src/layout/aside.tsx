@@ -12,7 +12,12 @@ export default defineComponent({
       const authStore = useAuthStore()
       const menus = authStore.menus
       const route = useRoute()
-      const currentRoute = computed(() => route.fullPath)
+      const currentRoute = computed(() => {
+        if (route.meta.activeMenu) {
+          return route.meta.activeMenu
+        }
+        return route.fullPath
+      })
       const systemStore = useSystem()
       const collapse = computed(() => systemStore.collapse)
       const renderMenu = (menus: RouteRecordRaw[]) => {

@@ -1,5 +1,5 @@
-type statusType = 0 | 1 // 0下架 1上架
-type sendType = 0 | 1 // 0连载中 2已完结
+type statusType = 0 | 1 | '' // 0下架 1上架
+type sendType = 0 | 1 | '' // 0连载中 2已完结
 export interface IColumnRequest {
   id: number | null | undefined
   title: string
@@ -13,6 +13,7 @@ export interface IColumnRequest {
 }
 export interface IColumnListRequest {
   page: number
+  limit: number
   status?: statusType
   title?: string
 }
