@@ -1,154 +1,126 @@
 <script setup lang="ts">
-import type Node from 'element-plus/es/components/tree/src/model/node'
-import { DropType } from 'element-plus/es/components/tree/src/tree.type'
-import { ElTreeType } from '@/types/element-plus'
-
-const treeRef = ref<ElTreeType | null>(null)
-const data = ref([
-  {
-    id: '1',
-    label: 'Level one 1',
-    children: [
-      {
-        id: '1-1',
-        label: 'Level two 1-1'
-      },
-      {
-        id: '1-2',
-        label: 'Level two 1-2'
-      },
-      {
-        id: '1-3',
-        label: 'Level two 1-3'
-      }
-    ]
-  },
-  {
-    id: '2',
-    label: 'Level one 2',
-    children: [
-      {
-        id: '2-1',
-        label: 'Level two 2-1',
-        children: [
-          {
-            id: '2-1-1',
-            name: 'Level three 2-1-1'
-          },
-          {
-            id: '2-1-2',
-            name: 'Level three 2-1-1'
-          },
-          {
-            id: '2-1-3',
-            name: 'Level three 2-1-1'
-          }
-        ]
-      },
-      {
-        id: '2-2',
-        label: 'Level two 2-2',
-        children: [
-          {
-            id: '2-1-2',
-            name: 'Level three 2-2-1'
-          }
-        ]
-      }
-    ]
-  }
+import {
+  ICourseResponse,
+  ICourseListRequest,
+  ICourseRequest
+} from '@/api/module/types/course'
+import PageSearch from '@/components/page-search/index.vue'
+import EditDialog from './components/edit-dialog.vue'
+import usePageAction from '@/hooks/usePageAction'
+import useTableColumns from './config/useTableColumns'
+const stateOptions = ref([
+  { label: '全部', value: '' },
+  { label: '已上架', value: 1 },
+  { label: '已下架', value: 0 }
 ])
-const defaultExpandedKeys = computed(() => data.value.map((it) => it.id))
-const defaultProps = {
-  children: 'children',
-  label: (data: any) => data.label || data.name
-}
-const checkedKeys = ref(['1-1', '2-1-2'])
-
-const handleAllowDrop = (
-  draggingNode: Node,
-  dropNode: Node,
-  type: DropType
-) => {
-  // 父节点相同的兄弟节点才可以拖拽
-  if (
-    type !== 'inner' &&
-    draggingNode.parent.data.label === dropNode.parent.data.label
-  ) {
-    return true
-  }
-}
-const handleNodeDrop = (
-  draggingNode: Node,
-  dropNode: Node,
-  dropType: DropType,
-  ev: any
-) => {
-  const parentKey = ev.target?.parentNode?.parentNode?.dataset?.key
-  if (parentKey) {
-    const r = treeRef.value?.getNode(parentKey) as Node
-    console.log(r.data.children)
-  } else {
-    console.log(data.value)
-  }
-  init()
-}
-const handleGetKeys = () => {
-  // [父级半选中, 当前选中子节点]
-  console.log(treeRef.value?.getHalfCheckedKeys())
-  console.log(treeRef.value?.getCheckedKeys())
-}
-// 监听节点选中事件
-const handleCheck = (data: any, treeData: any) => {
-  checkedKeys.value = treeData.checkedKeys
-}
-function init() {
-  checkedKeys.value.forEach((key) => {
-    const node = treeRef.value?.getNode(key)
-    if (node && node.isLeaf) {
-      node.setChecked(true)
-    }
-  })
-}
-onMounted(() => {
-  init()
+// 查
+const queryParams = ref<ICourseListRequest>({
+  page: 1,
+  limit: 10,
+  type: 'audio',
+  status: '',
+  title: ''
 })
-</script>
+const {
+  loading,
+  total,
+  list,
+  getListData,
+  deleteData,
+  updateStateData,
+  searchData
+} = usePageAction<ICourseResponse>({ queryParams, module: 'audio' })
+const editDialogRef = ref<InstanceType<typeof EditDialog> | null>(null)
 
+const handleState = async (row: ICourseResponse) => {
+  updateStateData(row, ['已下架', '上架成功'])
+}
+const handleDelete = (row: ICourseResponse) => {
+  const title = `是否删除标题为${row.title}的图文?`
+  deleteData(row, title)
+}
+const handleCreated = () => {
+  editDialogRef.value?.open('新建图文')
+}
+const handleEdit = (row: ICourseRequest) => {
+  editDialogRef.value?.open('编辑图文', row)
+}
+const handleSearch = (searchObj: any) => {
+  queryParams.value.status = searchObj.selected
+  queryParams.value.title = searchObj.search
+  searchData()
+}
+const columns = useTableColumns({ handleDelete, handleEdit })
+
+getListData()
+</script>
 <template>
-  <el-card shadow="never" class="md:m-4">
-    <el-tree
-      ref="treeRef"
-      :data="data"
-      :props="defaultProps"
-      :allow-drop="handleAllowDrop"
-      @node-drop="handleNodeDrop"
-      @check="handleCheck"
-      draggable
-      node-key="id"
-      show-checkbox
-      :indent="20"
-      :default-expanded-keys="defaultExpandedKeys"
+  <el-card class="md:m-4 media" shadow="never">
+    <PageSearch
+      @submit="handleSearch"
+      :model="queryParams"
+      :select-options="stateOptions"
+      show-search
+      show-select
     >
-      <template #default="{ node }">
-        <div class="inner w-full flex justify-between">
-          <span class="flex items-center">{{
-            node.data.label || node.data.name
-          }}</span>
-          <div>
-            <el-button class="mr-4">删除</el-button>
-            <el-button class="mr-4">编辑</el-button>
+      <template #left>
+        <el-button type="primary" :loading="loading" @click="handleCreated"
+          >新增图文</el-button
+        >
+      </template>
+    </PageSearch>
+    <PageTable
+      :columns="columns"
+      :list="list"
+      :loading="loading"
+      v-model:page="queryParams.page"
+      v-model:limit="queryParams.limit"
+      v-model:total="total"
+      :get-list="getListData"
+    >
+      <template #media="{ row }">
+        <div class="course-graphics">
+          <div class="course-cover">
+            <img :src="row.cover || '/img_default.svg'" alt="" />
+          </div>
+          <div class="course-desc">
+            <div class="course-title">{{ row.title }}</div>
+            <div class="course-price">{{ row.price }}</div>
           </div>
         </div>
       </template>
-    </el-tree>
-    <el-button type="primary" @click="handleGetKeys">获取选中</el-button>
+      <template #status="{ row }">
+        <el-switch
+          v-model="row.status"
+          :disabled="row.stateLoading"
+          :inactive-value="0"
+          :active-value="1"
+          @click="handleState(row)"
+        ></el-switch>
+      </template>
+    </PageTable>
+    <EditDialog ref="editDialogRef" :get-list="getListData"></EditDialog>
   </el-card>
 </template>
 
 <style scoped lang="scss">
-:deep(.el-tree-node__content) {
-  padding: 20px 0;
-  @apply border-b-1 border-gray-600;
+.media {
+  .course-graphics {
+    @apply flex justify-center w-full;
+    .course-cover {
+      @apply w-14;
+      img {
+        @apply flex w-full;
+      }
+    }
+    .course-desc {
+      @apply flex flex-col flex-1 pl-4 justify-between text-left whitespace-nowrap;
+      .course-title {
+      }
+      .course-price {
+        @apply text-red-600;
+      }
+    }
+  }
 }
 </style>
