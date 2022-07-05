@@ -29,21 +29,21 @@ const {
   deleteData,
   updateStateData,
   searchData
-} = usePageAction<ICourseResponse>({ queryParams, module: 'audio' })
+} = usePageAction<ICourseResponse>({ queryParams, module: 'media' })
 const editDialogRef = ref<InstanceType<typeof EditDialog> | null>(null)
 
 const handleState = async (row: ICourseResponse) => {
   updateStateData(row, ['已下架', '上架成功'])
 }
 const handleDelete = (row: ICourseResponse) => {
-  const title = `是否删除标题为${row.title}的图文?`
+  const title = `是否删除标题为${row.title}的音频?`
   deleteData(row, title)
 }
 const handleCreated = () => {
-  editDialogRef.value?.open('新建图文')
+  editDialogRef.value?.open('新建音频')
 }
 const handleEdit = (row: ICourseRequest) => {
-  editDialogRef.value?.open('编辑图文', row)
+  editDialogRef.value?.open('编辑音频', row)
 }
 const handleSearch = (searchObj: any) => {
   queryParams.value.status = searchObj.selected
@@ -65,7 +65,7 @@ getListData()
     >
       <template #left>
         <el-button type="primary" :loading="loading" @click="handleCreated"
-          >新增图文</el-button
+          >新增音频</el-button
         >
       </template>
     </PageSearch>

@@ -24,7 +24,7 @@ const formData = ref<ICourseRequest>({
   status: 1,
   title: '',
   try: '',
-  type: 'audio'
+  type: 'video'
 })
 
 const formRef = ref<ElFormType | null>(null)
@@ -94,12 +94,12 @@ defineExpose({ open })
         <el-form-item label="封面" prop="cover">
           <UploadCrop v-model="formData.cover"></UploadCrop>
         </el-form-item>
-        <el-form-item label="音频介绍" prop="try">
+        <el-form-item label="视频介绍" prop="try">
           <Editor v-model="formData.try" />
         </el-form-item>
-        <el-form-item label="音频" prop="content">
+        <el-form-item label="视频" prop="content">
           <!-- <Editor v-model="formData.content" /> -->
-          <UploadList v-model="formData.content" text="上传音频"></UploadList>
+          <UploadList v-model="formData.content" text="上传视频"></UploadList>
         </el-form-item>
         <el-form-item label="课程价格" prop="price">
           <el-input-number

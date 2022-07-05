@@ -6,7 +6,7 @@
     :http-request="customUpload"
     :show-file-list="false"
   >
-    <el-button type="primary">上传视频</el-button>
+    <el-button type="primary">{{ text }}</el-button>
     <template #tip>
       <div class="el-upload__tip">
         支持mp4，avi，wmv，mov，flv，rmvb，3gp，m4v，mkv格式；文件最大不超过2G。
@@ -27,6 +27,10 @@ import type { UploadProps } from 'element-plus'
 
 const props = defineProps({
   modelValue: {
+    type: String,
+    default: ''
+  },
+  text: {
     type: String,
     default: ''
   }
