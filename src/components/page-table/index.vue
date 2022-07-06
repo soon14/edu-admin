@@ -3,6 +3,8 @@ import { PropType } from 'vue'
 import { formatDate } from '@/utils/date'
 import { IColumn } from './types'
 import { cloneDeep } from '@/utils/lodash'
+import Sortable from 'sortablejs'
+import { ElTableType } from '@/types/element-plus'
 
 const props = defineProps({
   list: {
@@ -32,6 +34,10 @@ const props = defineProps({
   getList: {
     type: Function,
     default: () => {}
+  },
+  draggable: {
+    type: Boolean,
+    default: false
   }
 })
 const emit = defineEmits<{
@@ -43,6 +49,7 @@ const emit = defineEmits<{
   (e: 'update:page', total: number): void
   (e: 'update:limit', total: number): void
   (e: 'selectionChange', rows: any[]): void
+  (e: 'drag', rows: any[]): void
 }>()
 const currentTotal = ref(props.total)
 const currentPage = ref(props.page)
@@ -86,17 +93,52 @@ watch(
 const handleSelectionChange = (rows: any[]) => {
   emit('selectionChange', cloneDeep(rows))
 }
+const tableRef = ref<ElTableType | null>(null)
+const refreshId = ref(1)
+const initSortable = () => {
+  const tbodyEl = tableRef.value?.$el.querySelector(
+    '.el-table__body-wrapper tbody'
+  )
+  if (tableRef.value) {
+    Sortable.create(tbodyEl, {
+      animation: 150,
+      handle: '.move',
+      disabled: !props.draggable,
+      onEnd: function (evt) {
+        const { newIndex, oldIndex } = evt
+        const modelValueCopy = [...props.list]
+        if (![newIndex, oldIndex].includes(undefined)) {
+          const target = modelValueCopy.splice(oldIndex!, 1)[0]
+          modelValueCopy.splice(newIndex!, 0, target)
+          emit('drag', modelValueCopy)
+          refreshId.value++
+          nextTick(() => {
+            initSortable()
+          })
+        }
+      }
+    })
+  }
+}
+onMounted(() => {
+  initSortable()
+})
 </script>
 
 <template>
   <div class="">
     <el-table
+      :key="refreshId"
       :data="list"
       v-loading="loading"
       class="w-full"
       table-layout="auto"
       @selection-change="handleSelectionChange"
+      ref="tableRef"
     >
+      <el-table-column v-if="draggable" width="50px" align="center">
+        <i class="fas fa-maximize move select-none cursor-move p-2"></i>
+      </el-table-column>
       <slot></slot>
       <template v-for="(item, index) in columns" :key="index">
         <el-table-column v-bind="item" v-if="item.type === 'action_btn'">
@@ -142,4 +184,8 @@ const handleSelectionChange = (rows: any[]) => {
   </div>
 </template>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+.fa-maximize {
+  transform: rotate(45deg);
+}
+</style>

@@ -80,6 +80,7 @@ defineExpose({ open, close: () => (visible.value = false) })
     :loading="currentLoading"
     v-model="visible"
     @close="handleClose"
+    title="选择课程"
     showBtn
     @confirm="handleConfirm"
   >

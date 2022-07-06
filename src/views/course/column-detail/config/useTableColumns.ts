@@ -4,7 +4,7 @@ export default ({ handleDelete }: { handleDelete: any }) => {
     {
       label: '#',
       type: 'index',
-      width: '100px',
+      width: '50px',
       align: 'center',
       headerAlign: 'center'
     },

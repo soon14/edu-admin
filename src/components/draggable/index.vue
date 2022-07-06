@@ -43,6 +43,7 @@ const initSortable = () => {
 onMounted(() => {
   initSortable()
 })
+defineExpose({ initSortable })
 </script>
 
 <template>

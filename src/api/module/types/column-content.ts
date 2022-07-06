@@ -8,7 +8,7 @@ export interface IColumnContentsRequest {
 }
 export interface IColumnContentsSortRequest {
   ids: number[]
-  course_id: number
+  column_id: number
 }
 export interface IColumnContentsDeleteRequest {
   ids: number[]
