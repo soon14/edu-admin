@@ -96,6 +96,11 @@ getListData()
 </script>
 <template>
   <el-card class="md:m-4 media" shadow="never">
+    <el-container>
+      <el-header>
+        <el-page-header title="返回" @back="$router.back()"></el-page-header>
+      </el-header>
+    </el-container>
     <DetailHeader
       v-if="firstInfoLoad"
       :data="courseInfo"
