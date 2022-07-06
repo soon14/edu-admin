@@ -26,12 +26,16 @@ const emit = defineEmits<{
 const handleSizeChange = (value: number) => {
   emit('update:pageSize', value)
   emit('change', value)
-  props.getData && props.getData()
+  nextTick(() => {
+    props.getData && props.getData()
+  })
 }
 const handleCurrentChange = (value: number) => {
   emit('update:currentPage', value)
   emit('change', value)
-  props.getData && props.getData()
+  nextTick(() => {
+    props.getData && props.getData()
+  })
   nextTick(() => {
     const main = document.querySelector(
       '.el-main.layout-right'

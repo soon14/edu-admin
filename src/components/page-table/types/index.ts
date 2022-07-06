@@ -6,7 +6,8 @@ interface IBtn {
   name: string
   type?: ButtonType
   size?: ButtonProps['size']
-  handle: any
+  slot?: string
+  handle?: any
 }
 export interface IColumn extends Partial<IElTableColumn> {
   slot?: string

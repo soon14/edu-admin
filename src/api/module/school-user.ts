@@ -25,45 +25,45 @@ export default {
     })
   },
   // 查询网校用户详细信息
-  getSchoolUserDescById(id: number) {
+  getSchoolUserDescByIdApi(id: number) {
     return request.get<ISchoolUser>({
       url: '/admin/s/school_user/read',
       params: { id }
     })
   },
   // 查看网校用户订阅列表
-  getSchoolUserSubs(params: IScrollUserSubRequest) {
+  getSchoolUserSubsApi(params: IScrollUserSubRequest) {
     return request.get<IScrollUserSubResponse>({
       url: '/admin/s/order_item',
       params
     })
   },
   // 查看网校用户订单列表
-  getSchoolUserOrders(params: IScrollUserOrderRequest) {
+  getSchoolUserOrdersApi(params: IScrollUserOrderRequest) {
     return request.get<IScrollUserOrderResponse>({
       url: '/admin/s/order',
       params
     })
   },
   // 查看网校用户观看历史
-  getSchoolUserHistory(params: IScrollUserHistoryRequest) {
+  getSchoolUserHistoryApi(params: IScrollUserHistoryRequest) {
     return request.get<IScrollUserHistoryResponse>({
       url: '/admin/s/user_history',
       params
     })
   },
   // 禁止/开启访问
-  changeAccess(params: IScrollUserAccessRequest) {
+  changeAccessApi(data: IScrollUserAccessRequest) {
     return request.post<IScrollUserAccessResponse>({
-      url: '/admin/s/school_user/updateaccess',
-      params
+      url: '/adminApi/s/school_user/updateaccess',
+      data
     })
   },
   // 禁止/开启评论
-  changeComment(params: IScrollUserCommentRequest) {
+  changeCommentApi(data: IScrollUserCommentRequest) {
     return request.post<IScrollUserCommentResponse>({
       url: '/admin/s/school_user/updatecomment',
-      params
+      data
     })
   }
 }

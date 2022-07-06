@@ -19,6 +19,8 @@ export interface ISchoolUser {
   updated_time: string
   userId: number
   user: IUser
+  accessLoading?: boolean
+  commentLoading?: boolean
 }
 export interface ISchoolUserRequest {
   page: number
