@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ISchoolUserRequest, ISchoolUser } from '@/api/module/types/school-user'
 import PageSearch from '@/components/page-search/index.vue'
-import EditDialog from './components/edit-dialog.vue'
+import DescDialog from './components/desc-dialog.vue'
 import usePageAction from '@/hooks/usePageAction'
 import useTableColumns from './config/useTableColumns'
 import schoolUserApi from '@/api/module/school-user'
@@ -14,7 +14,7 @@ const queryParams = ref<ISchoolUserRequest>({
 })
 const { loading, total, list, getListData, searchData } =
   usePageAction<ISchoolUser>({ queryParams, module: 'school-user' })
-const editDialogRef = ref<InstanceType<typeof EditDialog> | null>(null)
+const descDialogRef = ref<InstanceType<typeof DescDialog> | null>(null)
 
 const handleStateChange = async (type: string, row: ISchoolUser) => {
   try {
@@ -40,7 +40,9 @@ const handleStateChange = async (type: string, row: ISchoolUser) => {
     })
   }
 }
-const handleToDetailPage = () => {}
+const handleToDetailPage = (row: ISchoolUser) => {
+  descDialogRef.value?.open('用户详情', row.id)
+}
 const handleSearch = (searchObj: any) => {
   queryParams.value.keyword = searchObj.search
   searchData()
@@ -91,7 +93,7 @@ getListData()
         ></el-switch>
       </template>
     </PageTable>
-    <EditDialog ref="editDialogRef" :get-list="getListData"></EditDialog>
+    <DescDialog ref="descDialogRef"></DescDialog>
   </el-card>
 </template>
 

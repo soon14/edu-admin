@@ -7,6 +7,7 @@ export interface IUser {
   username: string
   nickname: string
   avatar: string
+  status?: number
 }
 export interface ISchoolUser {
   id: number
