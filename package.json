@@ -17,12 +17,14 @@
     "@wangeditor/editor": "^5.1.1",
     "axios": "^0.27.2",
     "element-plus": "^2.2.6",
+    "file-saver": "^2.0.5",
     "lodash": "^4.17.21",
     "pinia": "^2.0.14",
     "sortablejs": "^1.15.0",
     "vue": "^3.2.25",
     "vue-cropper": "^1.0.3",
-    "vue-router": "^4.0.16"
+    "vue-router": "^4.0.16",
+    "xlsx": "^0.18.5"
   },
   "devDependencies": {
     "@commitlint/cli": "^17.0.3",
