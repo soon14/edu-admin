@@ -1,9 +1,11 @@
 <script setup lang="ts">
 import { ElFormType } from '@/types/element-plus'
-import { ICourseRequest } from '@/api/module/types/course'
+import { ICash } from '@/api/module/types/cash'
 import { rules } from './config/edit-rules'
 import { cloneDeep } from '@/utils/lodash/'
 import usePageAction from '@/hooks/usePageAction'
+import CitySelect from '@/components/city-select/index.vue'
+
 const props = defineProps({
   getList: {
     type: Function,
@@ -11,24 +13,26 @@ const props = defineProps({
   }
 })
 const { createData, updateData } = usePageAction({
-  module: 'media'
+  module: 'cash'
 })
 const visible = ref(false)
 const dialogTitle = ref('')
-const formData = ref<ICourseRequest>({
+const formData = ref<Partial<ICash>>({
   id: null,
-  content: '',
-  cover: '',
-  price: 0,
-  t_price: 0,
-  status: 1,
-  title: '',
-  try: '',
-  type: 'media'
+  // school_id: -1,
+  account: '',
+  province: '',
+  city: '',
+  area: '',
+  path: '',
+  bank: '',
+  name: '',
+  status: 1
 })
 
 const formRef = ref<ElFormType | null>(null)
 const formLoading = ref(false)
+const citySelectRef = ref<InstanceType<typeof CitySelect> | null>(null)
 
 const handleConfirm = () => {
   formRef.value?.validate(async (valid) => {
@@ -55,18 +59,25 @@ const handleConfirm = () => {
 const handleClose = () => {
   formRef.value?.resetFields()
 }
-const open = (title: string, row?: ICourseRequest) => {
+const open = (title: string, row?: Partial<ICash>) => {
   visible.value = true
   dialogTitle.value = title
   nextTick(() => {
     if (row && row.id) {
       formData.value = cloneDeep({
-        ...row,
-        price: parseFloat(row.price as any),
-        t_price: parseFloat(row.t_price as any)
+        ...row
       })
+      const cityData = [row.province, row.city, row.area].filter(
+        (it) => it
+      ) as string[]
+      citySelectRef.value?.setValue(cityData)
     }
   })
+}
+const handleCityChange = (data: string[]) => {
+  formData.value.province = data[0]
+  formData.value.city = data[1]
+  formData.value.area = data[2]
 }
 defineExpose({ open })
 </script>
@@ -88,37 +99,23 @@ defineExpose({ open })
         label-width="80px"
         size="default"
       >
-        <el-form-item label="标题" prop="title">
-          <el-input v-model="formData.title"></el-input>
+        <el-form-item label="账号" prop="account">
+          <el-input v-model="formData.account"></el-input>
         </el-form-item>
-        <el-form-item label="封面" prop="cover">
-          <UploadCrop v-model="formData.cover"></UploadCrop>
+        <el-form-item label="省市区" prop="title">
+          <CitySelect
+            @change="handleCityChange"
+            ref="citySelectRef"
+          ></CitySelect>
         </el-form-item>
-        <el-form-item label="试看内容" prop="try">
-          <Editor v-model="formData.try" />
+        <el-form-item label="详细地址" prop="path">
+          <el-input v-model="formData.path"></el-input>
         </el-form-item>
-        <el-form-item label="课程内容" prop="content">
-          <Editor v-model="formData.content" />
+        <el-form-item label="所属银行" prop="bank">
+          <BandSelect v-model="formData.bank"></BandSelect>
         </el-form-item>
-        <el-form-item label="课程价格" prop="price">
-          <el-input-number
-            v-model="formData.price"
-            :min="0"
-            :precision="2"
-          ></el-input-number>
-        </el-form-item>
-        <el-form-item label="划线价格" prop="t_price">
-          <el-input-number
-            v-model="formData.t_price"
-            :min="0"
-            :precision="2"
-          ></el-input-number>
-        </el-form-item>
-        <el-form-item label="状态" prop="status">
-          <el-radio-group v-model="formData.status">
-            <el-radio :label="0">下架</el-radio>
-            <el-radio :label="1">上架</el-radio>
-          </el-radio-group>
+        <el-form-item label="姓名" prop="name">
+          <el-input v-model="formData.name"></el-input>
         </el-form-item>
       </el-form>
     </DialogBase>

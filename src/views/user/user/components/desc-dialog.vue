@@ -32,12 +32,12 @@ const handleClose = () => {
   activeTabName.value = 'course'
   userId.value = -1
 }
-const open = (title: string, id: number) => {
-  visible.value = true
+const open = async (title: string, id: number) => {
   dialogTitle.value = title
   schoolId.value = id
+  await getInfoData()
   nextTick(async () => {
-    getInfoData()
+    visible.value = true
   })
 }
 
@@ -54,8 +54,7 @@ defineExpose({ open })
       @confirm="handleConfirm"
       @close="handleClose"
     >
-      <DescInfo :data="descData" v-if="!descLoading"></DescInfo>
-      <el-skeleton v-else animated :rows="1"></el-skeleton>
+      <DescInfo :data="descData"></DescInfo>
       <div class="flex">
         <template v-for="(item, index) in tabOptions" :key="index">
           <div

@@ -1,53 +1,43 @@
 <script setup lang="ts">
 import {
-  ICourseResponse,
-  ICourseListRequest,
-  ICourseRequest
-} from '@/api/module/types/course'
+  ICash,
+  ICashRequest,
+  ICashUpdateRequest
+} from '@/api/module/types/cash'
 import PageSearch from '@/components/page-search/index.vue'
-import EditDialog from './components/edit-dialog.vue'
 import usePageAction from '@/hooks/usePageAction'
 import useTableColumns from './config/useTableColumns'
+
+const EditDialog = defineAsyncComponent(
+  () => import('./components/edit-dialog.vue')
+)
+
 const stateOptions = ref([
-  { label: '全部', value: '' },
-  { label: '已上架', value: 1 },
-  { label: '已下架', value: 0 }
+  { label: '启用', value: 1 },
+  { label: '禁用', value: 0 }
 ])
 // 查
-const queryParams = ref<ICourseListRequest>({
+const queryParams = ref<ICashRequest>({
   page: 1,
   limit: 10,
-  type: 'media',
-  status: '',
-  title: ''
+  status: 1
 })
-const {
-  loading,
-  total,
-  list,
-  getListData,
-  deleteData,
-  updateStateData,
-  searchData
-} = usePageAction<ICourseResponse>({ queryParams, module: 'media' })
+const { loading, total, list, getListData, deleteData, searchData } =
+  usePageAction<ICash>({ queryParams, module: 'cash' })
 const editDialogRef = ref<InstanceType<typeof EditDialog> | null>(null)
 
-const handleState = async (row: ICourseResponse) => {
-  updateStateData(row, ['已下架', '上架成功'])
-}
-const handleDelete = (row: ICourseResponse) => {
-  const title = `是否删除标题为${row.title}的图文?`
+const handleDelete = (row: ICash) => {
+  const title = `是否删除 ${row.name}`
   deleteData(row, title)
 }
 const handleCreated = () => {
   editDialogRef.value?.open('新建图文')
 }
-const handleEdit = (row: ICourseRequest) => {
+const handleEdit = (row: ICashUpdateRequest) => {
   editDialogRef.value?.open('编辑图文', row)
 }
 const handleSearch = (searchObj: any) => {
   queryParams.value.status = searchObj.selected
-  queryParams.value.title = searchObj.search
   searchData()
 }
 const columns = useTableColumns({ handleDelete, handleEdit })
@@ -56,16 +46,19 @@ getListData()
 </script>
 <template>
   <el-card class="md:m-4 media" shadow="never">
-    <PageSearch
-      @submit="handleSearch"
-      :model="queryParams"
-      :select-options="stateOptions"
-      show-search
-      show-select
-    >
+    <PageSearch :model="queryParams" :select-options="stateOptions" show-select>
       <template #left>
         <el-button type="primary" :loading="loading" @click="handleCreated"
-          >新增图文</el-button
+          >新增收款账号</el-button
+        >
+      </template>
+      <template #right_append="{ selected }">
+        <el-button
+          class="ml-2"
+          type="primary"
+          :loading="loading"
+          @click="handleSearch({ selected })"
+          >搜索</el-button
         >
       </template>
     </PageSearch>
@@ -78,26 +71,6 @@ getListData()
       v-model:total="total"
       :get-list="getListData"
     >
-      <template #media="{ row }">
-        <div class="course-graphics">
-          <div class="course-cover">
-            <img :src="row.cover || '/img_default.svg'" alt="" />
-          </div>
-          <div class="course-desc">
-            <div class="course-title">{{ row.title }}</div>
-            <div class="course-price">{{ row.price }}</div>
-          </div>
-        </div>
-      </template>
-      <template #status="{ row }">
-        <el-switch
-          v-model="row.status"
-          :disabled="row.stateLoading"
-          :inactive-value="0"
-          :active-value="1"
-          @click="handleState(row)"
-        ></el-switch>
-      </template>
     </PageTable>
     <EditDialog ref="editDialogRef" :get-list="getListData"></EditDialog>
   </el-card>

@@ -16,30 +16,19 @@ export default ({
       headerAlign: 'center'
     },
     {
-      label: '图文内容',
-      slot: 'media'
+      label: '账号',
+      prop: 'account',
+      width: '220px'
     },
     {
-      label: '订阅量',
-      prop: 'sub_count',
-      width: '100px',
-      align: 'center',
-      headerAlign: 'center'
+      label: '开户人',
+      prop: 'name',
+      width: '100px'
     },
     {
-      label: '状态',
-      slot: 'status',
-      width: '100px',
-      align: 'center',
-      headerAlign: 'center'
-    },
-    {
-      label: '创建时间',
-      prop: 'created_time',
-      type: 'time',
-      width: '200px',
-      align: 'center',
-      headerAlign: 'center'
+      label: '开户行',
+      prop: 'bank',
+      width: '220px'
     },
     {
       label: '',

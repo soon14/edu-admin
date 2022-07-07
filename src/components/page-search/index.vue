@@ -101,6 +101,11 @@ defineExpose({ validate })
               native-type="submit"
               >搜索</el-button
             >
+            <slot
+              name="right_append"
+              :selected="selected"
+              :search="search"
+            ></slot>
           </div>
         </el-col>
       </el-row>
