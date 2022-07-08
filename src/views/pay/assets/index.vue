@@ -1,74 +1,63 @@
 <script setup lang="ts">
-import {
-  ICourseResponse,
-  ICourseListRequest,
-  ICourseRequest
-} from '@/api/module/types/course'
-import PageSearch from '@/components/page-search/index.vue'
 import EditDialog from './components/edit-dialog.vue'
 import usePageAction from '@/hooks/usePageAction'
 import useTableColumns from './config/useTableColumns'
-const stateOptions = ref([
-  { label: '全部', value: '' },
-  { label: '已上架', value: 1 },
-  { label: '已下架', value: 0 }
-])
+import {
+  ICashconfirm,
+  ICashconfirmRequest
+} from '@/api/module/types/cashconfirm'
 // 查
-const queryParams = ref<ICourseListRequest>({
+const queryParams = ref<ICashconfirmRequest>({
   page: 1,
-  limit: 10,
-  type: 'media',
-  status: '',
-  title: ''
+  limit: 10
 })
-const {
-  loading,
-  total,
-  list,
-  getListData,
-  deleteData,
-  updateStateData,
-  searchData
-} = usePageAction<ICourseResponse>({ queryParams, module: 'media' })
+const { loading, total, list, getListData, updateStateData } =
+  usePageAction<ICashconfirm>({ queryParams, module: 'cashconfirm' })
 const editDialogRef = ref<InstanceType<typeof EditDialog> | null>(null)
 
-const handleState = async (row: ICourseResponse) => {
-  updateStateData(row, ['已下架', '上架成功'])
+const handleGetCash = () => {
+  editDialogRef.value?.open()
 }
-const handleDelete = (row: ICourseResponse) => {
-  const title = `是否删除标题为${row.title}的图文?`
-  deleteData(row, title)
-}
-const handleCreated = () => {
-  editDialogRef.value?.open('新建图文')
-}
-const handleEdit = (row: ICourseRequest) => {
-  editDialogRef.value?.open('编辑图文', row)
-}
-const handleSearch = (searchObj: any) => {
-  queryParams.value.status = searchObj.selected
-  queryParams.value.title = searchObj.search
-  searchData()
-}
-const columns = useTableColumns({ handleDelete, handleEdit })
+
+const columns = useTableColumns()
 
 getListData()
 </script>
 <template>
-  <el-card class="md:m-4 media" shadow="never">
-    <PageSearch
-      @submit="handleSearch"
-      :model="queryParams"
-      :select-options="stateOptions"
-      show-search
-      show-select
-    >
-      <template #left>
-        <el-button type="primary" :loading="loading" @click="handleCreated"
-          >新增图文</el-button
-        >
-      </template>
-    </PageSearch>
+  <div class="md:m-4">
+    <el-row :gutter="10">
+      <el-col :span="24" :md="8">
+        <el-card shadow="never">
+          <template #header>
+            <div class="flex justify-between">
+              可用余额(元)
+              <el-button
+                type="primary"
+                size="small"
+                :loading="loading"
+                @click="handleGetCash"
+                >申请提现</el-button
+              >
+            </div>
+          </template>
+          100.00
+        </el-card>
+      </el-col>
+      <el-col :span="24" :md="8">
+        <el-card shadow="never">
+          <template #header> 累计收入(元) </template>
+          99999.00
+        </el-card>
+      </el-col>
+      <el-col :span="24" :md="8">
+        <el-card shadow="never">
+          <template #header> 待结算金额(元) </template>
+          5000.00
+        </el-card>
+      </el-col>
+    </el-row>
+  </div>
+  <el-card class="md:m-4" shadow="never">
     <PageTable
       :columns="columns"
       :list="list"
@@ -78,49 +67,17 @@ getListData()
       v-model:total="total"
       :get-list="getListData"
     >
-      <template #media="{ row }">
-        <div class="course-graphics">
-          <div class="course-cover">
-            <img :src="row.cover || '/img_default.svg'" alt="" />
-          </div>
-          <div class="course-desc">
-            <div class="course-title">{{ row.title }}</div>
-            <div class="course-price">{{ row.price }}</div>
-          </div>
-        </div>
-      </template>
       <template #status="{ row }">
-        <el-switch
-          v-model="row.status"
-          :disabled="row.stateLoading"
-          :inactive-value="0"
-          :active-value="1"
-          @click="handleState(row)"
-        ></el-switch>
+        <el-tag type="success" v-if="!!row.status">已通过</el-tag>
+        <el-tag type="warning" v-else>审核中</el-tag>
       </template>
     </PageTable>
-    <EditDialog ref="editDialogRef" :get-list="getListData"></EditDialog>
+    <EditDialog
+      ref="editDialogRef"
+      :get-list="getListData"
+      :max-price="100"
+    ></EditDialog>
   </el-card>
 </template>
 
-<style scoped lang="scss">
-.media {
-  .course-graphics {
-    @apply flex justify-center w-full;
-    .course-cover {
-      @apply w-14;
-      img {
-        @apply flex w-full;
-      }
-    }
-    .course-desc {
-      @apply flex flex-col flex-1 pl-4 justify-between text-left whitespace-nowrap;
-      .course-title {
-      }
-      .course-price {
-        @apply text-red-600;
-      }
-    }
-  }
-}
-</style>
+<style scoped lang="scss"></style>

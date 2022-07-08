@@ -1,48 +1,45 @@
 <script setup lang="ts">
 import { ElFormType } from '@/types/element-plus'
-import { ICourseRequest } from '@/api/module/types/course'
 import { rules } from './config/edit-rules'
-import { cloneDeep } from '@/utils/lodash/'
-import usePageAction from '@/hooks/usePageAction'
+import { IGetCashRequest } from '@/api/module/types/cashconfirm'
+import ashconfirmApi from '@/api/module/cashconfirm'
+import cashApi from '@/api/module/cash'
+import { LIST_API } from '@/constants/fetch'
+import { ICash } from '@/api/module/types/cash'
+
 const props = defineProps({
   getList: {
     type: Function,
     default: () => ({})
+  },
+  maxPrice: {
+    type: Number,
+    default: 0
   }
 })
-const { createData, updateData } = usePageAction({
-  module: 'media'
-})
 const visible = ref(false)
-const dialogTitle = ref('')
-const formData = ref<ICourseRequest>({
-  id: null,
-  content: '',
-  cover: '',
-  price: 0,
-  t_price: 0,
-  status: 1,
-  title: '',
-  try: '',
-  type: 'media'
+const dialogTitle = ref('申请提现')
+const formData = ref<IGetCashRequest>({
+  cash_id: '',
+  price: 0
 })
 
 const formRef = ref<ElFormType | null>(null)
 const formLoading = ref(false)
+const cashList = ref<ICash[]>([])
 
 const handleConfirm = () => {
   formRef.value?.validate(async (valid) => {
     if (valid) {
       formLoading.value = true
       try {
-        if (formData.value.id) {
-          await updateData({ ...formData.value })
-        } else {
-          await createData({ ...formData.value })
-        }
+        // await ashconfirmApi.getCashApi({
+        //   cash_id: formData.value.cash_id,
+        //   price: formData.value.price
+        // })
         ElMessage({
           type: 'success',
-          message: formData.value.id ? '编辑成功' : '新增成功'
+          message: '演示数据, 成功发出申请'
         })
       } finally {
         formLoading.value = false
@@ -55,18 +52,16 @@ const handleConfirm = () => {
 const handleClose = () => {
   formRef.value?.resetFields()
 }
-const open = (title: string, row?: ICourseRequest) => {
+const open = async () => {
+  cashList.value = (
+    await cashApi[LIST_API]({
+      page: 1,
+      limit: 20,
+      status: 1
+    })
+  ).items
+  console.log(cashList.value)
   visible.value = true
-  dialogTitle.value = title
-  nextTick(() => {
-    if (row && row.id) {
-      formData.value = cloneDeep({
-        ...row,
-        price: parseFloat(row.price as any),
-        t_price: parseFloat(row.t_price as any)
-      })
-    }
-  })
 }
 defineExpose({ open })
 </script>
@@ -88,37 +83,33 @@ defineExpose({ open })
         label-width="80px"
         size="default"
       >
-        <el-form-item label="标题" prop="title">
-          <el-input v-model="formData.title"></el-input>
-        </el-form-item>
-        <el-form-item label="封面" prop="cover">
-          <UploadCrop v-model="formData.cover"></UploadCrop>
-        </el-form-item>
-        <el-form-item label="试看内容" prop="try">
-          <Editor v-model="formData.try" />
-        </el-form-item>
-        <el-form-item label="课程内容" prop="content">
-          <Editor v-model="formData.content" />
-        </el-form-item>
-        <el-form-item label="课程价格" prop="price">
+        <el-form-item label="提现金额" prop="price">
           <el-input-number
             v-model="formData.price"
             :min="0"
+            :max="maxPrice"
             :precision="2"
           ></el-input-number>
         </el-form-item>
-        <el-form-item label="划线价格" prop="t_price">
-          <el-input-number
-            v-model="formData.t_price"
-            :min="0"
-            :precision="2"
-          ></el-input-number>
-        </el-form-item>
-        <el-form-item label="状态" prop="status">
-          <el-radio-group v-model="formData.status">
-            <el-radio :label="0">下架</el-radio>
-            <el-radio :label="1">上架</el-radio>
-          </el-radio-group>
+        <el-form-item label="提现账户" prop="cash_id">
+          <el-select v-model="formData.cash_id" placeholder="选择账户">
+            <el-option
+              v-for="item in cashList"
+              :key="(item.id as number)"
+              :label="item.bank"
+              :value="(item.id as number)"
+            >
+              <span style="float: left">{{ item.bank }}</span>
+              <span
+                style="
+                  float: right;
+                  color: var(--el-text-color-secondary);
+                  font-size: 13px;
+                "
+                >{{ item.name }}</span
+              >
+            </el-option>
+          </el-select>
         </el-form-item>
       </el-form>
     </DialogBase>

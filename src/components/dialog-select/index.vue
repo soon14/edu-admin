@@ -10,6 +10,14 @@ const props = defineProps({
   loading: {
     type: Boolean,
     default: false
+  },
+  single: {
+    type: Boolean,
+    default: false
+  },
+  isColumn: {
+    type: Boolean,
+    default: false
   }
 })
 const emit = defineEmits<{
@@ -31,14 +39,25 @@ const {
   searchData
 } = usePageAction<ICourseResponse>({
   queryParams,
-  module: 'media'
+  module: props.isColumn ? 'column' : 'media'
 })
 const currentLoading = computed(() => props.loading || listLoading.value)
-const options = [
-  { label: '图文', prop: 'media' },
-  { label: '音频', prop: 'audio' },
-  { label: '视频', prop: 'video' }
-]
+// const options = [
+//   { label: '图文', prop: 'media' },
+//   { label: '音频', prop: 'audio' },
+//   { label: '视频', prop: 'video' }
+// ]
+const options = computed(() => {
+  if (props.isColumn) {
+    return [{ label: '专栏', prop: 'column' }]
+  } else {
+    return [
+      { label: '图文', prop: 'media' },
+      { label: '音频', prop: 'audio' },
+      { label: '视频', prop: 'video' }
+    ]
+  }
+})
 const actionProp = ref('media')
 const columns = useTableColumns()
 const selectList = ref([])
@@ -51,6 +70,11 @@ const handleMenuClick = (prop: any) => {
 watch(visible, () => {
   if (visible.value) {
     getListData()
+    if (props.isColumn) {
+      actionProp.value = 'column'
+    } else {
+      actionProp.value = 'media'
+    }
   }
 })
 const handleSelectionChange = (rows: any) => {
@@ -62,8 +86,22 @@ const handleClose = () => {
   selectList.value = []
 }
 const handleConfirm = () => {
-  if (selectList.value.length) {
-    emit('selected', selectList.value)
+  const length = selectList.value.length
+  if (length) {
+    if (props.single && length === 1) {
+      emit('selected', selectList.value)
+    }
+    if (props.single && length > 1) {
+      ElMessage({
+        type: 'warning',
+        message: '只允许选择一个课程',
+        duration: 1500
+      })
+      return
+    }
+    if (!props.single) {
+      emit('selected', selectList.value)
+    }
   } else {
     visible.value = false
   }
@@ -80,7 +118,8 @@ defineExpose({ open, close: () => (visible.value = false) })
     :loading="currentLoading"
     v-model="visible"
     @close="handleClose"
-    title="选择课程"
+    :title="props.isColumn ? '选择专栏' : '选择课程'"
+    top="3%"
     showBtn
     @confirm="handleConfirm"
   >

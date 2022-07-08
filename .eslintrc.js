@@ -21,7 +21,8 @@ module.exports = {
     'no-unused-vars': 'off',
     'vue/multi-word-component-names': 'off',
     'func-call-spacing': 'off',
-    'vue/html-self-closing': 'off'
+    'vue/html-self-closing': 'off',
+    'vue/valid-v-model': 'off'
   },
   overrides: [
     {
