@@ -14,7 +14,7 @@ function formatDate(numb, format) {
 }
 
 /**
- * [用于导入] 将key为中文的数组转化为key为英文的数组, 并且按照`映射关系`转换数据类型 
+ * [用于导入] 将key为中文的数组转化为key为英文的数组, 并且按照`映射关系`转换数据类型
  * @param {Array} list    中文数组
  * @param {Object} mapper 映射关系对象 (映射关系格式需按要求配置)
    {name: {

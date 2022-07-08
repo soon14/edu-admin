@@ -1,5 +1,6 @@
 import { FormRules } from 'element-plus'
 
 export const rules: FormRules = {
-  title: [{ required: true, message: '请填写标题', trigger: 'blur' }]
+  goods_id: [{ required: true, message: '请选择关联', trigger: 'blur' }],
+  end_time: [{ required: true, message: '请选择时间范围', trigger: 'blur' }]
 }

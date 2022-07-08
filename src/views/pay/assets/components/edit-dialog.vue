@@ -60,7 +60,6 @@ const open = async () => {
       status: 1
     })
   ).items
-  console.log(cashList.value)
   visible.value = true
 }
 defineExpose({ open })

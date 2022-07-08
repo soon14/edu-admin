@@ -25,13 +25,14 @@ const handleEdit = (row: Partial<IGroup>) => {
 const columns = useTableColumns({ handleEdit })
 
 getListData()
-setTimeout(() => {
-  console.log(list.value[0])
-}, 1000)
 </script>
 <template>
   <el-card class="md:m-4 group" shadow="never">
-    <el-button type="primary" :loading="loading" @click="handleCreated"
+    <el-button
+      class="mb-4"
+      type="primary"
+      :loading="loading"
+      @click="handleCreated"
       >创建拼团</el-button
     >
     <PageTable

@@ -25,7 +25,7 @@ const formData = ref<Partial<IGroup>>({
   price: 0,
   start_time: '',
   end_time: '',
-  p_num: 0,
+  p_num: 1,
   expire: 24,
   goods_id: null,
   value: {
@@ -110,7 +110,6 @@ const open = (title: string, row?: Partial<IGroup>) => {
         price: parseFloat(row.price as any)
       })
     }
-    console.log(row)
   })
 }
 defineExpose({ open })
@@ -169,7 +168,7 @@ defineExpose({ open })
           ></el-input-number>
         </el-form-item>
         <el-form-item label="拼团人数" prop="p_num">
-          <el-input-number v-model="formData.p_num" :min="0"></el-input-number>
+          <el-input-number v-model="formData.p_num" :min="1"></el-input-number>
         </el-form-item>
         <el-form-item label="开启凑团" prop="status">
           <el-radio-group v-model="formData.status">

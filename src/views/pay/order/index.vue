@@ -40,7 +40,6 @@ const payMethodMap = {
 const selected = ref<IOrder[]>([])
 const selectionChange = (rows: IOrder[]) => {
   selected.value = rows
-  console.log(selected.value)
 }
 
 const { loading, total, list, getListData, deleteData, searchData } =

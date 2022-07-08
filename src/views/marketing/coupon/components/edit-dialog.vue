@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ElFormType } from '@/types/element-plus'
-import { IFlashsale } from '@/api/module/types/flashsale'
+import { ICoupon } from '@/api/module/types/coupon'
 import { rules } from './config/edit-rules'
 import { cloneDeep } from '@/utils/lodash/'
 import usePageAction from '@/hooks/usePageAction'
@@ -14,17 +14,18 @@ const props = defineProps({
   }
 })
 const { createData, updateData } = usePageAction({
-  module: 'flashsale'
+  module: 'coupon'
 })
 const visible = ref(false)
 const dialogTitle = ref('')
-const formData = ref<Partial<IFlashsale>>({
+const formData = ref<Partial<ICoupon>>({
   type: 'course',
   status: 1,
-  price: 0,
+  price: 0.1,
+  condition: 0,
   start_time: '',
   end_time: '',
-  s_num: 1,
+  c_num: 1,
   goods_id: null,
   value: {
     cover: '',
@@ -98,14 +99,15 @@ const handleClose = () => {
     type: ''
   }
 }
-const open = (title: string, row?: Partial<IFlashsale>) => {
+const open = (title: string, row?: Partial<ICoupon>) => {
   visible.value = true
   dialogTitle.value = title
   nextTick(() => {
     if (row && row.id) {
       formData.value = cloneDeep({
         ...row,
-        price: parseFloat(row.price as any)
+        price: parseFloat(row.price as any),
+        condition: parseFloat(row.condition as any)
       })
     }
   })
@@ -158,17 +160,24 @@ defineExpose({ open })
             alt=""
           />
         </el-form-item>
-        <el-form-item label="秒杀价" prop="price">
+        <el-form-item label="面值" prop="price">
           <el-input-number
             v-model="formData.price"
+            :min="0.1"
+            :precision="2"
+          ></el-input-number>
+        </el-form-item>
+        <el-form-item label="条件金额" prop="condition">
+          <el-input-number
+            v-model="formData.condition"
             :min="0"
             :precision="2"
           ></el-input-number>
         </el-form-item>
-        <el-form-item label="秒杀人数" prop="s_num">
-          <el-input-number v-model="formData.s_num" :min="1"></el-input-number>
+        <el-form-item label="发行量" prop="c_num">
+          <el-input-number v-model="formData.c_num" :min="1"></el-input-number>
         </el-form-item>
-        <el-form-item label="拼团时间范围" prop="end_time">
+        <el-form-item label="优惠券使用期限" prop="end_time">
           <div class="w-10">
             <el-date-picker
               v-model="(startAndEndTime as any)"
