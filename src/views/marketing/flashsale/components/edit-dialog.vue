@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ElFormType } from '@/types/element-plus'
-import { IGroup } from '@/api/module/types/group'
+import { IFlashsale } from '@/api/module/types/flashsale'
 import { rules } from './config/edit-rules'
 import { cloneDeep } from '@/utils/lodash/'
 import usePageAction from '@/hooks/usePageAction'
@@ -14,19 +14,17 @@ const props = defineProps({
   }
 })
 const { createData, updateData } = usePageAction({
-  module: 'group'
+  module: 'flashsale'
 })
 const visible = ref(false)
 const dialogTitle = ref('')
-const formData = ref<Partial<IGroup>>({
+const formData = ref<Partial<IFlashsale>>({
   type: 'course',
-  auto: 1,
   status: 1,
   price: 0,
   start_time: '',
   end_time: '',
-  p_num: 0,
-  expire: 24,
+  s_num: 0,
   goods_id: null,
   value: {
     cover: '',
@@ -100,7 +98,7 @@ const handleClose = () => {
     type: ''
   }
 }
-const open = (title: string, row?: Partial<IGroup>) => {
+const open = (title: string, row?: Partial<IFlashsale>) => {
   visible.value = true
   dialogTitle.value = title
   nextTick(() => {
@@ -110,7 +108,6 @@ const open = (title: string, row?: Partial<IGroup>) => {
         price: parseFloat(row.price as any)
       })
     }
-    console.log(row)
   })
 }
 defineExpose({ open })
@@ -161,27 +158,15 @@ defineExpose({ open })
             alt=""
           />
         </el-form-item>
-        <el-form-item label="拼团价" prop="price">
+        <el-form-item label="秒杀价" prop="price">
           <el-input-number
             v-model="formData.price"
             :min="0"
             :precision="2"
           ></el-input-number>
         </el-form-item>
-        <el-form-item label="拼团人数" prop="p_num">
-          <el-input-number v-model="formData.p_num" :min="0"></el-input-number>
-        </el-form-item>
-        <el-form-item label="开启凑团" prop="status">
-          <el-radio-group v-model="formData.status">
-            <el-radio :label="0">否</el-radio>
-            <el-radio :label="1">是</el-radio>
-          </el-radio-group>
-        </el-form-item>
-        <el-form-item label="拼团时限" prop="expire">
-          <el-radio-group v-model="formData.expire">
-            <el-radio :label="24">24小时</el-radio>
-            <el-radio :label="48">48小时</el-radio>
-          </el-radio-group>
+        <el-form-item label="秒杀人数" prop="s_num">
+          <el-input-number v-model="formData.s_num" :min="0"></el-input-number>
         </el-form-item>
         <el-form-item label="拼团时间范围" prop="start_time">
           <div class="w-10">

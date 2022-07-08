@@ -31,22 +31,20 @@ const queryParams = ref<ICourseListRequest>({
   status: '',
   title: ''
 })
-const {
-  loading: listLoading,
-  total,
-  list,
-  getListData,
-  searchData
-} = usePageAction<ICourseResponse>({
-  queryParams,
-  module: props.isColumn ? 'column' : 'media'
+
+//  loading: listLoading,
+//   total,
+//   list,
+//   getListData,
+//   searchData
+const init = computed(() => {
+  return usePageAction<ICourseResponse>({
+    queryParams,
+    module: props.isColumn ? 'column' : 'media'
+  })
 })
-const currentLoading = computed(() => props.loading || listLoading.value)
-// const options = [
-//   { label: '图文', prop: 'media' },
-//   { label: '音频', prop: 'audio' },
-//   { label: '视频', prop: 'video' }
-// ]
+const currentLoading = computed(() => props.loading || init.value.loading.value)
+
 const options = computed(() => {
   if (props.isColumn) {
     return [{ label: '专栏', prop: 'column' }]
@@ -64,12 +62,12 @@ const selectList = ref([])
 const handleMenuClick = (prop: any) => {
   actionProp.value = prop
   queryParams.value.type = prop
-  searchData()
+  init.value.searchData()
 }
 
 watch(visible, () => {
   if (visible.value) {
-    getListData()
+    init.value.getListData()
     if (props.isColumn) {
       actionProp.value = 'column'
     } else {
@@ -141,8 +139,8 @@ defineExpose({ open, close: () => (visible.value = false) })
         <PageTable
           :loading="currentLoading"
           :columns="columns"
-          :get-list="getListData"
-          :list="list"
+          :get-list="init.getListData"
+          :list="init.list.value"
           @selection-change="handleSelectionChange"
         >
           <template #media="{ row }">
@@ -166,8 +164,8 @@ defineExpose({ open, close: () => (visible.value = false) })
     <template #append>
       <Pagination
         v-model:currentPage="queryParams.page"
-        v-model:total="total"
-        :get-data="getListData"
+        v-model:total="init.total.value"
+        :get-data="init.getListData"
       ></Pagination>
     </template>
   </DialogBase>

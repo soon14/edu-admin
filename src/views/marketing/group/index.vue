@@ -25,6 +25,9 @@ const handleEdit = (row: Partial<IGroup>) => {
 const columns = useTableColumns({ handleEdit })
 
 getListData()
+setTimeout(() => {
+  console.log(list.value[0])
+}, 1000)
 </script>
 <template>
   <el-card class="md:m-4 group" shadow="never">
@@ -47,7 +50,12 @@ getListData()
           </div>
           <div class="course-desc">
             <div class="course-title">{{ row.value.title }}</div>
-            <div class="course-price">{{ row.value.price }}</div>
+            <div class="">
+              价格: <span class="course-price">{{ row.price }}</span
+              ><del class="ml-1 text-12px opacity-70">{{
+                row.value.price
+              }}</del>
+            </div>
           </div>
         </div>
       </template>
@@ -75,7 +83,7 @@ getListData()
       .course-title {
       }
       .course-price {
-        @apply text-red-600;
+        @apply text-red-600 ml-1;
       }
     }
   }
