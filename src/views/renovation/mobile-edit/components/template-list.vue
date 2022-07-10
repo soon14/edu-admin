@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import useRenovation from '../hooks/useRenovation'
-const { menus, activeIndex, currentActiveTemplateCalc, pushTemplate } =
-  useRenovation()
+const { currentActiveTemplateCalc } = useRenovation()
 const type = computed(() => currentActiveTemplateCalc.value?.type)
 const props = defineProps({
   data: {
@@ -13,14 +12,10 @@ const props = defineProps({
     default: 0
   }
 })
-const handleActive = () => {
-  activeIndex.value = props.index
-  console.log(activeIndex.value)
-}
 </script>
 
 <template>
-  <div class="template-list" @click="handleActive">
+  <div class="template-list">
     <div class="header">
       <div>{{ data.title }}</div>
       <div v-if="data.showMore" class="opacity-60 text-sm">查看全部</div>
@@ -46,6 +41,7 @@ const handleActive = () => {
 
 <style scoped lang="scss">
 .template-list {
+  @apply cursor-pointer mb-2;
   .header {
     @apply flex justify-between select-none m-4 mb-0;
   }

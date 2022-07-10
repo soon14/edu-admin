@@ -1,5 +1,5 @@
 import renovationApi from '@/api/module/renovation'
-import { INFO_API } from '@/constants/fetch'
+import { INFO_API, UPDATE_API } from '@/constants/fetch'
 import {
   IRenovationUpdateRequest,
   Template
@@ -14,6 +14,7 @@ export const data = ref<IRenovationUpdateRequest>({
 })
 // 当前激活
 const activeIndex = ref(-1)
+const loading = ref(false)
 
 export default () => {
   // 当前菜单组件配置
@@ -30,8 +31,17 @@ export default () => {
 
   // 获取当前模板详情
   async function getInfoData(id: any) {
-    data.value = await renovationApi[INFO_API](id)
+    loading.value = true
+    try {
+      data.value = await renovationApi[INFO_API](id)
+    } finally {
+      loading.value = false
+    }
     console.log(data.value)
+  }
+  // 更新/保存模板详情
+  async function updateData() {
+    await renovationApi[UPDATE_API]({ ...data.value })
   }
   function resetStore(value: any) {
     data.value = {
@@ -46,26 +56,34 @@ export default () => {
     data.value.template.push(template)
   }
   // 根据索引向上移动模板
-  function moveTop(index: number) {
+  function moveTop() {
+    console.log('top')
+    const index = activeIndex.value
     if (index !== 0) {
       const target = data.value.template.splice(index, 1)[0]
       data.value.template.splice(index - 1, 0, target)
+      activeIndex.value--
     }
   }
   // 根据索引向下移动模板
-  function moveBottom(index: number) {
+  function moveBottom() {
+    const index = activeIndex.value
     if (index < data.value.template.length - 1) {
       const target = data.value.template.splice(index, 1)[0]
       data.value.template.splice(index + 1, 0, target)
+      activeIndex.value++
     }
   }
-  function removeTemplateByIndex(index: number) {
-    // data.value.template.splice(index, 1)
+  function removeTemplate() {
+    data.value.template.splice(activeIndex.value, 1)
+    activeIndex.value = -1
   }
   return {
     data,
     menus,
+    loading,
     getInfoData,
+    updateData,
     activeIndex,
     currentActiveTemplateCalc,
     templateCalc,
@@ -73,6 +91,6 @@ export default () => {
     pushTemplate,
     moveTop,
     moveBottom,
-    removeTemplateByIndex
+    removeTemplate
   }
 }

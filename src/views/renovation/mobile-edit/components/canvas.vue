@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import TemplateList from './template-list.vue'
+import useRenovation from '../hooks/useRenovation'
+import MovePanel from './move-panel.vue'
 
 const props = defineProps({
   templateData: {
@@ -14,12 +16,21 @@ const props = defineProps({
 const type = computed(() => {
   return props.templateData.type
 })
+const { activeIndex } = useRenovation()
+const handleActive = (e: any) => {
+  activeIndex.value = props.index
+}
 </script>
 
 <template>
   <div class="">
     <template v-if="type === 'list'">
-      <TemplateList :data="templateData" :index="index"></TemplateList>
+      <div
+        @click.stop="handleActive"
+        :class="{ 'active-border': props.index === activeIndex }"
+      >
+        <TemplateList :data="templateData" :index="index"></TemplateList>
+      </div>
     </template>
     <template v-else-if="type === 'search'"></template>
     <template v-else-if="type === 'swiper'"></template>
@@ -30,7 +41,12 @@ const type = computed(() => {
   </div>
 </template>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+.active-border {
+  border: 1px dashed var(--el-color-primary);
+  box-sizing: border-box;
+}
+</style>
 <script lang="ts">
 export default {
   name: 'CCanvas'
