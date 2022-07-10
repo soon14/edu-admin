@@ -1,4 +1,12 @@
-type statusType = 0 | 1 // 0 移动端   1 pc
+export type statusType = 0 | 1 // 0 移动端   1 pc
+type templateType =
+  | 'list'
+  | 'search'
+  | 'swiper'
+  | 'icons'
+  | 'coupon'
+  | 'promotion'
+  | 'imageAd'
 export interface IRenovationRequest {
   title: string
   ismobile: statusType
@@ -37,16 +45,16 @@ interface More {
   title: string
   url: string
 }
-interface Template {
-  type: string
+export interface Template {
+  type: templateType
   data: Datum[] | Data2[] | Data3[] | Data4[] | string
   title?: string
   listType?: string
   showMore?: boolean
-  more?: More
+  more?: More | null
 }
 export interface IRenovationUpdateRequest {
-  id: number
+  id: number | null
   title: string
   ismobile: number
   template: Template[]

@@ -38,6 +38,10 @@ const props = defineProps({
   draggable: {
     type: Boolean,
     default: false
+  },
+  showRadio: {
+    type: Boolean,
+    default: false
   }
 })
 const emit = defineEmits<{
@@ -90,10 +94,19 @@ watch(
     emit('update:limit', currentLimit.value)
   }
 )
+const currentRow = ref(-1)
+
 const handleSelectionChange = (rows: any[]) => {
   emit('selectionChange', cloneDeep(rows))
 }
+const handleRadioChange = (row: any) => {
+  currentRow.value = row.id
+  emit('selectionChange', [cloneDeep(row)])
+}
 const tableRef = ref<ElTableType | null>(null)
+
+// 当前选中的row
+
 const refreshId = ref(1)
 const initSortable = () => {
   const tbodyEl = tableRef.value?.$el.querySelector(
@@ -140,6 +153,27 @@ onMounted(() => {
         <i class="fas fa-maximize move select-none cursor-move p-2"></i>
       </el-table-column>
       <slot></slot>
+      <!--
+          监听选中事件:
+          @current-change="handleCurrent"
+      -->
+      <el-table-column
+        header-align="center"
+        align="center"
+        width="50"
+        v-if="showRadio"
+      >
+        <template #default="{ row }">
+          <el-radio
+            :label="row.id"
+            style="transform: translateX(0.5em)"
+            :model-value="currentRow"
+            @click="handleRadioChange(row)"
+            >{{ '' }}</el-radio
+          >
+        </template>
+      </el-table-column>
+
       <template v-for="(item, index) in columns" :key="index">
         <el-table-column v-bind="item" v-if="item.type === 'action_btn'">
           <template #default="{ row }">

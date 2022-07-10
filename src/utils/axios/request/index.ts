@@ -32,7 +32,10 @@ export class Request {
         // } else {
         //   return res.data
         // }
-        return res.data
+        if (res.data) {
+          return res.data
+        }
+        return res
       },
       (err) => {
         // if (err.response.status === 404) {

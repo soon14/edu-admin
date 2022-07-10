@@ -30,10 +30,10 @@ export default {
     })
   },
   // 页面列表
-  [LIST_API](data: IRenovationListRequest) {
+  [LIST_API](params: IRenovationListRequest) {
     return request.get<IRenovationListResponse>({
       url: '/admin/s/renovation',
-      data
+      params
     })
   },
   // 删除页面
@@ -45,9 +45,9 @@ export default {
   },
   // 查看模板详情
   [INFO_API](id: any) {
-    return request.get({
+    return request.get<IRenovationUpdateRequest>({
       url: '/admin/s/renovation/read',
-      params: id
+      params: { id }
     })
   }
 }
