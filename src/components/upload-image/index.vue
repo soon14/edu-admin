@@ -72,7 +72,7 @@ const isShowProgress = computed(() => {
       />
       <template v-else>
         <img v-if="imageUrl" :src="imageUrl" class="image" />
-        <img v-else src="./svg/upload.svg" alt="" />
+        <img v-else class="opacity-10" src="./svg/upload.svg" alt="" />
       </template>
     </div>
   </el-upload>

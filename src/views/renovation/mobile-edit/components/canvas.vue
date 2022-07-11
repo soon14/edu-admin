@@ -2,6 +2,8 @@
 import TemplateList from './template-list.vue'
 import useRenovation from '../hooks/useRenovation'
 import MovePanel from './move-panel.vue'
+import TemplateSearch from './template-search.vue'
+import TemplateSwiper from './template-swiper.vue'
 
 const props = defineProps({
   templateData: {
@@ -32,8 +34,24 @@ const handleActive = (e: any) => {
         <TemplateList :data="templateData" :index="index"></TemplateList>
       </div>
     </template>
-    <template v-else-if="type === 'search'"></template>
-    <template v-else-if="type === 'swiper'"></template>
+    <template v-else-if="type === 'search'">
+      <div
+        @click.stop="handleActive"
+        :class="{ 'active-border': props.index === activeIndex }"
+      >
+        <TemplateSearch
+          :placeholder="templateData.placeholder"
+        ></TemplateSearch>
+      </div>
+    </template>
+    <template v-else-if="type === 'swiper'">
+      <div
+        @click.stop="handleActive"
+        :class="{ 'active-border': props.index === activeIndex }"
+      >
+        <TemplateSwiper :data="templateData" :index="index"></TemplateSwiper>
+      </div>
+    </template>
     <template v-else-if="type === 'icons'"></template>
     <template v-else-if="type === 'coupon'"></template>
     <template v-else-if="type === 'promotion'"></template>

@@ -41,13 +41,21 @@ interface Data4 {
   name: string
   url: string
 }
+interface Data5 {
+  course_id: number | null
+  course_title: string
+  src: string
+  type: 'webview' | 'course' | ''
+  url: string
+}
 interface More {
   title: string
   url: string
 }
 export interface Template {
   type: templateType
-  data: Datum[] | Data2[] | Data3[] | Data4[] | string
+  data: Datum[] | Data2[] | Data3[] | Data4[] | string | Data5[]
+  placeholder?: string
   title?: string
   listType?: string
   showMore?: boolean

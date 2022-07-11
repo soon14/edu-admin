@@ -171,6 +171,10 @@ const handleCloseLink = () => {
     }
   }
 }
+.move {
+  transform: rotate(45deg);
+  transform-origin: center;
+}
 </style>
 <script lang="ts">
 export default {

@@ -1,15 +1,10 @@
 <script setup lang="ts">
 import useRenovation from '../hooks/useRenovation'
 const { activeIndex, removeTemplate, moveTop, moveBottom } = useRenovation()
-
-const handleClickOutSide = () => {
-  activeIndex.value = -1
-}
 </script>
 
 <template>
   <div
-    v-clickOutside="handleClickOutSide"
     v-if="activeIndex >= 0"
     class="absolute top-0 -right-8 w-8 el-card select-none cursor-pointer"
   >

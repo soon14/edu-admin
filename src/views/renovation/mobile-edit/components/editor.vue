@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import useRenovation from '../hooks/useRenovation'
 import EditorList from './editor-list.vue'
+import EditorSearch from './editor-search.vue'
+import EditorSwiper from './editor-swiper.vue'
 const { currentActiveTemplateCalc } = useRenovation()
 const type = computed(() => currentActiveTemplateCalc.value?.type)
 </script>
@@ -10,8 +12,12 @@ const type = computed(() => currentActiveTemplateCalc.value?.type)
     <template v-if="type === 'list'">
       <EditorList></EditorList>
     </template>
-    <template v-else-if="type === 'search'"></template>
-    <template v-else-if="type === 'swiper'"></template>
+    <template v-else-if="type === 'search'">
+      <EditorSearch></EditorSearch>
+    </template>
+    <template v-else-if="type === 'swiper'">
+      <EditorSwiper></EditorSwiper>
+    </template>
     <template v-else-if="type === 'icons'"></template>
     <template v-else-if="type === 'coupon'"></template>
     <template v-else-if="type === 'promotion'"></template>
