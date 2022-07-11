@@ -32,6 +32,7 @@ const handleActive = (e: any) => {
     <template v-if="type === 'list'">
       <div
         @click.stop="handleActive"
+        class="select-border"
         :class="{ 'active-border': props.index === activeIndex }"
       >
         <TemplateList :data="templateData" :index="index"></TemplateList>
@@ -40,6 +41,7 @@ const handleActive = (e: any) => {
     <template v-else-if="type === 'search'">
       <div
         @click.stop="handleActive"
+        class="select-border"
         :class="{ 'active-border': props.index === activeIndex }"
       >
         <TemplateSearch
@@ -50,6 +52,7 @@ const handleActive = (e: any) => {
     <template v-else-if="type === 'swiper'">
       <div
         @click.stop="handleActive"
+        class="select-border"
         :class="{ 'active-border': props.index === activeIndex }"
       >
         <TemplateSwiper :data="templateData" :index="index"></TemplateSwiper>
@@ -58,6 +61,7 @@ const handleActive = (e: any) => {
     <template v-else-if="type === 'icons'">
       <div
         @click.stop="handleActive"
+        class="select-border"
         :class="{ 'active-border': props.index === activeIndex }"
       >
         <TemplateIcons :data="templateData" :index="index"></TemplateIcons>
@@ -67,6 +71,7 @@ const handleActive = (e: any) => {
     <template v-else-if="type === 'promotion'">
       <div
         @click.stop="handleActive"
+        class="select-border"
         :class="{ 'active-border': props.index === activeIndex }"
       >
         <TemplateGroup :data="templateData" :index="index"></TemplateGroup>
@@ -75,6 +80,7 @@ const handleActive = (e: any) => {
     <template v-else>
       <div
         @click.stop="handleActive"
+        class="select-border"
         :class="{ 'active-border': props.index === activeIndex }"
       >
         <TemplateImage :data="templateData" :index="index"></TemplateImage>
@@ -84,6 +90,12 @@ const handleActive = (e: any) => {
 </template>
 
 <style scoped lang="scss">
+.select-border {
+  border: 1px dashed transparent;
+  box-sizing: border-box;
+  transition: border-color 0.3s;
+  border-radius: 3px;
+}
 .active-border {
   border: 1px dashed var(--el-color-primary);
   box-sizing: border-box;

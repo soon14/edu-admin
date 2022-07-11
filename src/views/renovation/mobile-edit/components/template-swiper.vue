@@ -25,14 +25,26 @@ watch(
 </script>
 
 <template>
-  <div class="template-swiper">
-    <el-carousel height="150px" :key="key">
-      <el-carousel-item v-for="item in data.data" :key="item">
+  <div class="template-swiper el-card m-2">
+    <el-carousel height="150px" :key="key" v-if="!!data.data.length">
+      <el-carousel-item v-for="item in data.data" :key="item.cover">
         <div class="w-full h-full object-cover">
-          <img :src="item.cover" alt="" class="" />
+          <img v-if="item.cover" :src="item.cover" alt="" class="" />
+          <div
+            v-else
+            class="flex items-center justify-center opacity-60 text-sm h-150px"
+          >
+            暂无图片
+          </div>
         </div>
       </el-carousel-item>
     </el-carousel>
+    <div
+      v-else
+      class="opacity-60 text-sm h-150px flex items-center justify-center"
+    >
+      【轮播图模块】请点击关联数据
+    </div>
   </div>
 </template>
 
