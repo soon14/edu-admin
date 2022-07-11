@@ -4,6 +4,7 @@ import useRenovation from '../hooks/useRenovation'
 import MovePanel from './move-panel.vue'
 import TemplateSearch from './template-search.vue'
 import TemplateSwiper from './template-swiper.vue'
+import TemplateIcons from './template-icons.vue'
 
 const props = defineProps({
   templateData: {
@@ -52,7 +53,14 @@ const handleActive = (e: any) => {
         <TemplateSwiper :data="templateData" :index="index"></TemplateSwiper>
       </div>
     </template>
-    <template v-else-if="type === 'icons'"></template>
+    <template v-else-if="type === 'icons'">
+      <div
+        @click.stop="handleActive"
+        :class="{ 'active-border': props.index === activeIndex }"
+      >
+        <TemplateIcons :data="templateData" :index="index"></TemplateIcons>
+      </div>
+    </template>
     <template v-else-if="type === 'coupon'"></template>
     <template v-else-if="type === 'promotion'"></template>
     <template v-else></template>

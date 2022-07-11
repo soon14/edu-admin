@@ -27,7 +27,68 @@ export default function () {
       ],
       icon: 'fas fa-compass'
     },
-    { title: '图标分类', type: 'icons', data: [], icon: 'fas fa-compass' },
+    {
+      title: '图标分类',
+      type: 'icons',
+      data: [
+        {
+          // @ts-ignore
+          course_id: null,
+          course_title: '',
+          page_title: '',
+          page_id: null,
+          url: '',
+          type: '',
+          name: '分类',
+          src: ''
+        },
+        {
+          // @ts-ignore
+          course_id: null,
+          course_title: '',
+          page_title: '',
+          page_id: null,
+          url: '',
+          type: '',
+          name: '分类',
+          src: ''
+        },
+        {
+          // @ts-ignore
+          course_id: null,
+          course_title: '',
+          page_title: '',
+          page_id: null,
+          url: '',
+          type: '',
+          name: '分类',
+          src: ''
+        },
+        {
+          // @ts-ignore
+          course_id: null,
+          course_title: '',
+          page_title: '',
+          page_id: null,
+          url: '',
+          type: '',
+          name: '分类',
+          src: ''
+        },
+        {
+          // @ts-ignore
+          course_id: null,
+          course_title: '',
+          page_title: '',
+          page_id: null,
+          url: '',
+          type: '',
+          name: '分类',
+          src: ''
+        }
+      ],
+      icon: 'fas fa-compass'
+    },
     { title: '优惠券', type: 'coupon', data: [], icon: 'fas fa-compass' },
     { title: '限时拼团', type: 'promotion', data: [], icon: 'fas fa-compass' },
     { title: '图片广告', type: 'imageAd', data: [], icon: 'fas fa-compass' }

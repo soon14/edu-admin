@@ -48,13 +48,22 @@ interface Data5 {
   type: 'webview' | 'course' | ''
   url: string
 }
+interface Data6 {
+  course_id: number | null
+  course_title: string
+  page_title: string
+  page_id: number | null
+  src: string
+  type: 'webview' | 'course' | ''
+  url: string
+}
 interface More {
   title: string
   url: string
 }
 export interface Template {
   type: templateType
-  data: Datum[] | Data2[] | Data3[] | Data4[] | string | Data5[]
+  data: Datum[] | Data2[] | Data3[] | Data4[] | string | Data5[] | Data6[]
   placeholder?: string
   title?: string
   listType?: string
