@@ -66,7 +66,7 @@ export interface Template {
   data: Datum[] | Data2[] | Data3[] | Data4[] | string | Data5[] | Data6[]
   placeholder?: string
   title?: string
-  listType?: string
+  listType?: 'group' | 'flash' | '' // group 拼团  flash 现实活动
   showMore?: boolean
   more?: More | null
 }

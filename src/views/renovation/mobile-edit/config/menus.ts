@@ -90,7 +90,13 @@ export default function () {
       icon: 'fas fa-compass'
     },
     { title: '优惠券', type: 'coupon', data: [], icon: 'fas fa-compass' },
-    { title: '限时拼团', type: 'promotion', data: [], icon: 'fas fa-compass' },
+    {
+      title: '限时拼团',
+      type: 'promotion',
+      listType: 'group',
+      data: [],
+      icon: 'fas fa-compass'
+    },
     { title: '图片广告', type: 'imageAd', data: [], icon: 'fas fa-compass' }
   ]
   return menus

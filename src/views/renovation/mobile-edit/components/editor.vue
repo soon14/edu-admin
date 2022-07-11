@@ -4,6 +4,8 @@ import EditorList from './editor-list.vue'
 import EditorSearch from './editor-search.vue'
 import EditorSwiper from './editor-swiper.vue'
 import EditorIcons from './editor-icons.vue'
+import EditorGroup from './editor-group.vue'
+import EditorImage from './editor-image.vue'
 const { currentActiveTemplateCalc } = useRenovation()
 const type = computed(() => currentActiveTemplateCalc.value?.type)
 </script>
@@ -23,8 +25,12 @@ const type = computed(() => currentActiveTemplateCalc.value?.type)
       <EditorIcons></EditorIcons>
     </template>
     <template v-else-if="type === 'coupon'"></template>
-    <template v-else-if="type === 'promotion'"></template>
-    <template v-else></template>
+    <template v-else-if="type === 'promotion'">
+      <EditorGroup></EditorGroup>
+    </template>
+    <template v-else>
+      <EditorImage></EditorImage>
+    </template>
   </div>
 </template>
 

@@ -5,6 +5,8 @@ import MovePanel from './move-panel.vue'
 import TemplateSearch from './template-search.vue'
 import TemplateSwiper from './template-swiper.vue'
 import TemplateIcons from './template-icons.vue'
+import TemplateGroup from './template-group.vue'
+import TemplateImage from './template-image.vue'
 
 const props = defineProps({
   templateData: {
@@ -61,9 +63,23 @@ const handleActive = (e: any) => {
         <TemplateIcons :data="templateData" :index="index"></TemplateIcons>
       </div>
     </template>
-    <template v-else-if="type === 'coupon'"></template>
-    <template v-else-if="type === 'promotion'"></template>
-    <template v-else></template>
+    <template v-else-if="type === 'coupon'"> </template>
+    <template v-else-if="type === 'promotion'">
+      <div
+        @click.stop="handleActive"
+        :class="{ 'active-border': props.index === activeIndex }"
+      >
+        <TemplateGroup :data="templateData" :index="index"></TemplateGroup>
+      </div>
+    </template>
+    <template v-else>
+      <div
+        @click.stop="handleActive"
+        :class="{ 'active-border': props.index === activeIndex }"
+      >
+        <TemplateImage :data="templateData" :index="index"></TemplateImage>
+      </div>
+    </template>
   </div>
 </template>
 
