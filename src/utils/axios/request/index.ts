@@ -32,7 +32,7 @@ export class Request {
         // } else {
         //   return res.data
         // }
-        if (res.data) {
+        if (res?.data) {
           return res.data
         }
         return res

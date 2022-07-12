@@ -1,9 +1,12 @@
 <script setup lang="ts"></script>
 
 <template>
-  <div class="home">
-    <SliderCaptcha></SliderCaptcha>
-  </div>
+  <div class="">bbs</div>
 </template>
 
 <style scoped lang="scss"></style>
+<script lang="ts">
+export default {
+  name: 'BbsPost'
+}
+</script>
