@@ -212,7 +212,7 @@ onMounted(() => {
       </template>
     </el-table>
     <Pagination
-      v-if="!!currentTotal"
+      v-if="!!currentTotal && currentTotal > limit"
       v-model:currentPage="currentPage"
       v-model:total="currentTotal"
       v-model:pageSize="currentLimit"
