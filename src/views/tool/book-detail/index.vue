@@ -9,8 +9,8 @@ import bookDetailApi from '@/api/module/book-detail'
 import { DELETE_API } from '@/constants/fetch'
 
 const route = useRoute()
-const bookId = computed(() => route.query.id)
-const bookTitle = computed(() => route.query.book_title)
+const bookId = computed(() => route.params.id)
+const bookTitle = computed(() => route.params.book_title)
 
 const queryParams = ref<IBookDetailListReq>({
   page: 1,
@@ -176,7 +176,7 @@ getListData().then((_) => {
                   ></i>
                   <div
                     v-if="!item.content"
-                    class="inline-block animate-pulse w-2 h-2 rounded-full bg-red-600"
+                    class="warn-point inline-block animate-pulse bg-red-600"
                   ></div>
                   <div class="w-8 text-center">{{ index + 1 }} .</div>
                   <span v-if="!item.editing" class="line-clamp-1 w-60 mr-4">
@@ -248,5 +248,10 @@ getListData().then((_) => {
   font-size: 12px;
   transform: rotate(45deg);
   opacity: 0.5;
+}
+.warn-point {
+  width: 6px;
+  height: 4px;
+  border-radius: 50%;
 }
 </style>

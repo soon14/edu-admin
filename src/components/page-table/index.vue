@@ -176,18 +176,18 @@ onMounted(() => {
 
       <template v-for="(item, index) in columns" :key="index">
         <el-table-column v-bind="item" v-if="item.type === 'action_btn'">
-          <template #default="{ row }">
+          <template #default="{ row, $index }">
             <el-space wrap>
               <template v-for="(btn, bIndex) in item?.btns" :key="bIndex">
                 <template v-if="!btn.slot">
                   <el-button
                     :size="btn.size"
                     :type="btn.type"
-                    @click="btn.handle(row)"
+                    @click="btn.handle(row, $index)"
                     >{{ btn.name }}</el-button
                   >
                 </template>
-                <slot v-else :name="btn.slot" :row="row"></slot>
+                <slot v-else :name="btn.slot" :row="row" :index="$index"></slot>
               </template>
             </el-space>
           </template>
@@ -205,8 +205,13 @@ onMounted(() => {
           </template>
         </el-table-column>
         <el-table-column v-bind="item" v-else-if="item.slot">
-          <template #default="{ row }">
-            <slot v-if="item.slot" :name="[item.slot]" :row="row"></slot>
+          <template #default="{ row, $index }">
+            <slot
+              v-if="item.slot"
+              :name="[item.slot]"
+              :row="row"
+              :index="$index"
+            ></slot>
           </template>
         </el-table-column>
       </template>

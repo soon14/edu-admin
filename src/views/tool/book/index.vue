@@ -40,9 +40,16 @@ const handleEdit = (row: IBook) => {
 
 const router = useRouter()
 const handleToPage = (row: IBook) => {
+  // router.push({
+  //   name: 'BookDetail',
+  //   query: {
+  //     id: row.id,
+  //     book_title: row.title
+  //   }
+  // })
   router.push({
     name: 'BookDetail',
-    query: {
+    params: {
       id: row.id,
       book_title: row.title
     }

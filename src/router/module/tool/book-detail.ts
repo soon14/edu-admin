@@ -1,5 +1,5 @@
 export default {
-  path: 'tool/book_detail',
+  path: 'tool/book_detail/:id/:book_title',
   name: 'BookDetail',
   component: () => import('@/views/tool/book-detail/index.vue'),
   meta: {

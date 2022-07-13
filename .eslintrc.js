@@ -22,7 +22,8 @@ module.exports = {
     'vue/multi-word-component-names': 'off',
     'func-call-spacing': 'off',
     'vue/html-self-closing': 'off',
-    'vue/valid-v-model': 'off'
+    'vue/valid-v-model': 'off',
+    'dot-notation': 'off'
   },
   overrides: [
     {
