@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import type { ElPagination } from 'element-plus'
+import { PropType } from 'vue'
 const props = defineProps({
   pageSize: {
     type: Number,
@@ -15,6 +17,10 @@ const props = defineProps({
   getData: {
     type: Function,
     default: null
+  },
+  type: Object as PropType<InstanceType<typeof ElPagination>['$props']>,
+  options: {
+    default: () => ({})
   }
 })
 
@@ -58,6 +64,7 @@ const handleCurrentChange = (value: number) => {
           :page-size="pageSize"
           :total="total"
           layout="sizes, prev, pager, next, jumper, total"
+          v-bind="options"
         >
         </el-pagination>
       </div>

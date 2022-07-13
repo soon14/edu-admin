@@ -15,6 +15,7 @@ const props = defineProps({
 })
 const emits = defineEmits<{
   (e: 'update:modelValue', arr: any[]): void
+  (e: 'change', arr: any[]): void
 }>()
 const draggableRef = ref<InstanceType<typeof HTMLDivElement> | null>(null)
 const refreshId = ref(1)
@@ -30,6 +31,7 @@ const initSortable = () => {
           const target = modelValueCopy.splice(oldIndex!, 1)[0]
           modelValueCopy.splice(newIndex!, 0, target)
           emits('update:modelValue', modelValueCopy)
+          emits('change', modelValueCopy)
           refreshId.value++
           nextTick(() => {
             initSortable()

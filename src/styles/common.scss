@@ -98,3 +98,8 @@ html.dark {
     background: var(--el-bg-color-overlay) !important;
   }
 }
+.line-clamp-1 {
+  text-overflow: ellipsis; //溢出时用...
+  overflow: hidden;
+  white-space: nowrap;
+}

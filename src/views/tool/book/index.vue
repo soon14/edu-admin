@@ -37,7 +37,17 @@ const handleCreated = () => {
 const handleEdit = (row: IBook) => {
   editDialogRef.value?.open('编辑图文', row)
 }
-const handleToPage = () => {}
+
+const router = useRouter()
+const handleToPage = (row: IBook) => {
+  router.push({
+    name: 'BookDetail',
+    query: {
+      id: row.id,
+      book_title: row.title
+    }
+  })
+}
 const handleSearch = (searchObj: any) => {
   queryParams.value.status = searchObj.selected
   queryParams.value.keyword = searchObj.search

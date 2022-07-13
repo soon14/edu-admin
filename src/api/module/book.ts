@@ -24,7 +24,6 @@ export default {
   },
   // 更新电子书
   [UPDATE_API](data: IBookUpdateReq) {
-    console.log(data, '??')
     return request.post({
       url: '/admin/s/book/update',
       data
