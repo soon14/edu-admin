@@ -73,6 +73,7 @@ export default <T = any>({
     await fetchApi(row)
   }
   const updateData = async (row: any) => {
+    console.log(row, ' ::')
     const fetchApi = ($api[module] as any)[UPDATE_API]
     await fetchApi(row)
   }
@@ -81,6 +82,7 @@ export default <T = any>({
   const updateStateData = async (row: any, msg: [string, string]) => {
     row.stateLoading = true
     try {
+      console.log(row)
       await ($api[module] as any)[UPDATE_STATE_API]({
         id: row.id,
         status: row.status
