@@ -173,13 +173,9 @@ defineExpose({ open })
           <!-- <Editor v-model="formData.remark"></Editor> -->
         </el-form-item>
         <el-form-item label="题目答案">
-          <pre>
-          {{ formData }}
-        </pre
-          >
           <Answer
             :type="formData.type"
-            :value="(values as any)[formData.type!]"
+            :value="(values as any)[currentType!]"
             @change-value="handleChangeValue"
             @change-options="handleChangeOptions"
           ></Answer>

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { PropType } from 'vue'
 import { questionType, IValue } from '@/api/module/types/question'
-import { radio } from './config/useTableColumns'
+import { radio, answer, completion } from './config/useTableColumns'
 // import answerTemplate from './config/answer-template'
 
 const props = defineProps({
@@ -80,6 +80,8 @@ const handleEditAnswer = (val: string, index: number) => {
 const radioColumns = radio({
   handleDelete
 })
+const answerColumns = answer()
+const completionColumns = completion({ handleDelete })
 </script>
 
 <template>
@@ -108,7 +110,30 @@ const radioColumns = radio({
         >新增</el-button
       >
     </template>
-    <template v-else-if="type === 'checkbox'"> </template>
+    <template v-else-if="type === 'checkbox'">
+      <PageTable :list="value.options" :columns="radioColumns">
+        <template #option="{ index }">
+          <el-checkbox-group
+            :model-value="(value.value as any)"
+            @update:model-value="() => handleRadioAndCheckboxUpdate(index)"
+          >
+            <el-checkbox :label="index">&nbsp;</el-checkbox>
+          </el-checkbox-group>
+        </template>
+        <template #letter="{ index }">
+          {{ lettersCalc[index] }}
+        </template>
+        <template #answer="{ row }">
+          {{ row }}
+        </template>
+      </PageTable>
+      <el-button
+        class="mt-2"
+        type="primary"
+        @click="handleCreateOption('checkbox')"
+        >新增</el-button
+      >
+    </template>
     <template v-else-if="type === 'trueOrfalse'">
       <PageTable :list="value.options" :columns="radioColumns">
         <template #option="{ index }">
@@ -132,12 +157,44 @@ const radioColumns = radio({
       <el-button
         class="mt-2"
         type="primary"
-        @click="handleCreateOption('radio')"
+        @click="handleCreateOption('trueOrfalse')"
         >新增</el-button
       >
     </template>
-    <template v-else-if="type === 'answer'"> </template>
-    <template v-else-if="type === 'completion'"> </template>
+    <template v-else-if="type === 'answer'">
+      <PageTable :list="value.options" :columns="answerColumns">
+        <template #option="{ index }">
+          <el-radio
+            :model-value="(value.value as any)[0]"
+            @update:model-value="handleRadioAndCheckboxUpdate"
+            :label="index"
+            >&nbsp;</el-radio
+          >
+        </template>
+        <template #letter="{ index }">
+          {{ lettersCalc[index] }}
+        </template>
+        <template #answer="{ row }">
+          {{ row }}
+        </template>
+      </PageTable>
+    </template>
+    <template v-else-if="type === 'completion'">
+      <PageTable :list="value.options" :columns="completionColumns">
+        <template #option="{ row, index }">
+          <el-input
+            :model-value="row"
+            @update:model-value="(val) => handleEditAnswer(val, index)"
+          ></el-input>
+        </template>
+      </PageTable>
+      <el-button
+        class="mt-2"
+        type="primary"
+        @click="handleCreateOption('completion')"
+        >新增</el-button
+      >
+    </template>
   </el-form>
 </template>
 
