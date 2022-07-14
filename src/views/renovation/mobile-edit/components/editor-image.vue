@@ -42,7 +42,6 @@ watch(
   { deep: true, immediate: true }
 )
 watch(uploadUrl, () => {
-  console.log(23123)
   ;(data.value.template[activeIndex.value]?.data[0] as any).src =
     uploadUrl.value
 })

@@ -5,6 +5,7 @@ import '@vue/runtime-core'
 
 declare module '@vue/runtime-core' {
   export interface GlobalComponents {
+    AnswerEditor: typeof import('./../components/answer-editor/index.vue')['default']
     BandSelect: typeof import('./../components/band-select/index.vue')['default']
     CitySelect: typeof import('./../components/city-select/index.vue')['default']
     DialogBase: typeof import('./../components/dialog-base/index.vue')['default']

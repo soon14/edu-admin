@@ -2,7 +2,7 @@
 import { PropType } from 'vue'
 import { questionType, IValue } from '@/api/module/types/question'
 import { radio, answer, completion } from './config/useTableColumns'
-// import answerTemplate from './config/answer-template'
+import { optionsLengthMap } from './config/options-length'
 
 const props = defineProps({
   type: {
@@ -66,6 +66,16 @@ const handleUpdate = (index: any) => {
   emit('change-value', Number(index))
 }
 const handleDelete = (row: any, index: number) => {
+  const minLength = (optionsLengthMap as any)[props.type]
+  if (minLength >= props.value.options.length) {
+    const message = `删除失败, 最少保留 ${minLength} 条选项`
+    ElMessage({
+      type: 'warning',
+      message,
+      duration: 1500
+    })
+    return
+  }
   // TODO 判断当前删除数量下限
   const options = [...props.value.options]
   options.splice(index, 1)
@@ -99,8 +109,11 @@ const completionColumns = completion({ handleDelete })
         <template #letter="{ index }">
           {{ lettersCalc[index] }}
         </template>
-        <template #answer="{ row }">
-          {{ row }}
+        <template #answer="{ row, index }">
+          <AnswerEditor
+            :model-value="row + ''"
+            @update:model-value="(val) => handleEditAnswer(val, index)"
+          ></AnswerEditor>
         </template>
       </PageTable>
       <el-button
@@ -123,8 +136,11 @@ const completionColumns = completion({ handleDelete })
         <template #letter="{ index }">
           {{ lettersCalc[index] }}
         </template>
-        <template #answer="{ row }">
-          {{ row }}
+        <template #answer="{ row, index }">
+          <AnswerEditor
+            :model-value="row + ''"
+            @update:model-value="(val) => handleEditAnswer(val, index)"
+          ></AnswerEditor>
         </template>
       </PageTable>
       <el-button
@@ -148,10 +164,10 @@ const completionColumns = completion({ handleDelete })
           {{ lettersCalc[index] }}
         </template>
         <template #answer="{ row, index }">
-          <el-input
-            :model-value="row"
+          <AnswerEditor
+            :model-value="row + ''"
             @update:model-value="(val) => handleEditAnswer(val, index)"
-          ></el-input>
+          ></AnswerEditor>
         </template>
       </PageTable>
       <el-button
@@ -174,18 +190,21 @@ const completionColumns = completion({ handleDelete })
         <template #letter="{ index }">
           {{ lettersCalc[index] }}
         </template>
-        <template #answer="{ row }">
-          {{ row }}
+        <template #answer="{ row, index }">
+          <AnswerEditor
+            :model-value="row + ''"
+            @update:model-value="(val) => handleEditAnswer(val, index)"
+          ></AnswerEditor>
         </template>
       </PageTable>
     </template>
     <template v-else-if="type === 'completion'">
       <PageTable :list="value.options" :columns="completionColumns">
         <template #option="{ row, index }">
-          <el-input
-            :model-value="row"
+          <AnswerEditor
+            :model-value="row + ''"
             @update:model-value="(val) => handleEditAnswer(val, index)"
-          ></el-input>
+          ></AnswerEditor>
         </template>
       </PageTable>
       <el-button
