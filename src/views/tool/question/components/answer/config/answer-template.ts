@@ -1,13 +1,13 @@
 const radio = () => {
   return {
     options: ['点击编辑内容', '点击编辑内容'],
-    value: 0
+    value: [0]
   }
 }
 const checkbox = () => {
   return {
     options: ['点击编辑内容', '点击编辑内容'],
-    value: 0
+    value: [0]
   }
 }
 const trueOrfalse = () => {

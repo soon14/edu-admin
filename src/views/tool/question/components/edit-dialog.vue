@@ -38,21 +38,33 @@ const values = ref({
   completion: null
 })
 
-watch(visible, () => {
-  const currentType = formData.value.type
-  if (visible.value) {
-    values.value.radio = templates['radio']() as any
-    values.value.checkbox = templates['checkbox']() as any
-    values.value.trueOrfalse = templates['trueOrfalse']() as any
-    values.value.answer = templates['answer']() as any
-    values.value.completion = templates['completion']() as any
-    if (formData.value.id) {
-      // @ts-ignore
-      values.value[currentType] = formData.value
-    }
-  }
-  console.log(values.value)
-})
+// watch(visible, () => {
+//   const currentType = formData.value.type
+//   if (visible.value) {
+//     values.value.radio = templates['radio']() as any
+//     values.value.checkbox = templates['checkbox']() as any
+//     values.value.trueOrfalse = templates['trueOrfalse']() as any
+//     values.value.answer = templates['answer']() as any
+//     values.value.completion = templates['completion']() as any
+//     if (formData.value.id) {
+//       // @ts-ignore
+//       values.value[currentType] = formData.value
+//       console.log(formData.value)
+//     }
+//   } else {
+//     formData.value = {
+//       id: null,
+//       school_id: 11,
+//       title: '',
+//       remark: '',
+//       type: 'radio',
+//       value: {
+//         options: [],
+//         value: null
+//       }
+//     }
+//   }
+// })
 
 const formRef = ref<ElFormType | null>(null)
 const formLoading = ref(false)
@@ -61,11 +73,16 @@ const handleConfirm = () => {
   formRef.value?.validate(async (valid) => {
     if (valid) {
       formLoading.value = true
+      const params = {
+        ...formData.value,
+        // @ts-ignore
+        value: values.value[currentType.value]
+      }
       try {
         if (formData.value.id) {
-          await updateData({ ...formData.value })
+          await updateData(params)
         } else {
-          await createData({ ...formData.value })
+          await createData(params)
         }
         ElMessage({
           type: 'success',
@@ -81,19 +98,38 @@ const handleConfirm = () => {
 }
 const handleClose = () => {
   formRef.value?.resetFields()
+  formData.value.type = 'radio'
+  // setTimeout(() => {
+  //   formData.value = {
+  //     id: null,
+  //     school_id: 11,
+  //     title: '',
+  //     remark: '',
+  //     type: 'radio',
+  //     value: {
+  //       options: [],
+  //       value: null
+  //     }
+  //   }
+  // }, 1000)
 }
 const open = (title: string, row?: IQuestionItem) => {
   visible.value = true
   dialogTitle.value = title
-  nextTick(() => {
-    if (row && row.id) {
-      formData.value = cloneDeep({
-        ...row
-      })
-    }
-  })
+  values.value.radio = templates['radio']() as any
+  values.value.checkbox = templates['checkbox']() as any
+  values.value.trueOrfalse = templates['trueOrfalse']() as any
+  values.value.answer = templates['answer']() as any
+  values.value.completion = templates['completion']() as any
+  if (row && row.id) {
+    formData.value = cloneDeep({
+      ...row
+    })
+    // @ts-ignore
+    values.value[currentType.value] = { ...formData.value.value }
+  }
 }
-const handleChangeValue = (index: number) => {
+const handleChangeValue = (index: any) => {
   // @ts-ignore
   values.value[currentType.value].value = index
 }
@@ -137,6 +173,10 @@ defineExpose({ open })
           <!-- <Editor v-model="formData.remark"></Editor> -->
         </el-form-item>
         <el-form-item label="题目答案">
+          <pre>
+          {{ formData }}
+        </pre
+          >
           <Answer
             :type="formData.type"
             :value="(values as any)[formData.type!]"

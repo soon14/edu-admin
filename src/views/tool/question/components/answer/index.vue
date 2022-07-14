@@ -25,7 +25,7 @@ const lettersCalc = computed(() => {
 })
 
 const emit = defineEmits<{
-  (e: 'change-value', val: number): void
+  (e: 'change-value', val: number[] | number): void
   (e: 'change-options', val: any): void
 }>()
 
@@ -43,6 +43,25 @@ const handleCreateOption = (type: string) => {
   options.push('点击编辑内容')
   emit('change-options', options)
 }
+// 单选和多选 value 是数组格式
+const handleRadioAndCheckboxUpdate = (index: any) => {
+  const currentType = props.type
+  let value = [...(props.value.value as unknown as number[])]
+  const i = value.indexOf(index)
+  if (i === -1) {
+    if (currentType === 'radio') {
+      value = [index]
+    } else {
+      value.push(index)
+    }
+  } else {
+    if (currentType === 'checkbox') {
+      value.splice(i, 1)
+    }
+  }
+  emit('change-value', value)
+}
+// 判断 value 是字符串格式
 const handleUpdate = (index: any) => {
   emit('change-value', Number(index))
 }
@@ -69,8 +88,8 @@ const radioColumns = radio({
       <PageTable :list="value.options" :columns="radioColumns">
         <template #option="{ index }">
           <el-radio
-            :model-value="(value.value as any)"
-            @update:model-value="handleUpdate"
+            :model-value="(value.value as any)[0]"
+            @update:model-value="handleRadioAndCheckboxUpdate"
             :label="index"
             >&nbsp;</el-radio
           >
