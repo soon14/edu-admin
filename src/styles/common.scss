@@ -98,6 +98,9 @@ html.dark {
     background: var(--el-bg-color-overlay) !important;
   }
 }
+.el-button {
+  min-width: 88px;
+}
 .line-clamp-1 {
   text-overflow: ellipsis; //溢出时用...
   overflow: hidden;
