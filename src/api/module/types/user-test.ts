@@ -68,6 +68,6 @@ export interface ITestInfoRes {
 }
 
 export interface ITestUpdateStateReq {
-  id: number
+  id: number | null
   scores: number[] // 每个题目的分数
 }

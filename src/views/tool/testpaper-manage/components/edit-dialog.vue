@@ -1,72 +1,103 @@
 <script setup lang="ts">
 import { ElFormType } from '@/types/element-plus'
-import { ICourseRequest } from '@/api/module/types/course'
+import { ITestUpdateStateReq, ITestItem } from '@/api/module/types/user-test'
 import { rules } from './config/edit-rules'
 import { cloneDeep } from '@/utils/lodash/'
 import usePageAction from '@/hooks/usePageAction'
+import userTestApi from '@/api/module/user-test'
+import { UPDATE_STATE_API } from '@/constants/fetch'
+
 const props = defineProps({
   getList: {
     type: Function,
     default: () => ({})
   }
 })
-const { createData, updateData } = usePageAction({
-  module: 'media'
+const { getInfoData, loading } = usePageAction({
+  module: 'user-test'
 })
+const showSke = ref(true)
 const visible = ref(false)
 const dialogTitle = ref('')
-const formData = ref<ICourseRequest>({
+const formData = ref<ITestUpdateStateReq>({
   id: null,
-  content: '',
-  cover: '',
-  price: 0,
-  t_price: 0,
-  status: 1,
-  title: '',
-  try: '',
-  type: 'media'
+  scores: []
+})
+const infoData = ref({})
+// 标准答案分数与用户答案分数融合
+const questionsMergeValues = ref({
+  questions: []
+})
+const formRef = ref<ElFormType | null>(null)
+
+const scoreCalc = computed(() => {
+  let num = 0
+  ;((questionsMergeValues.value as any).questions as any[]).forEach((it) => {
+    num += it.score
+  })
+  return num
 })
 
-const formRef = ref<ElFormType | null>(null)
-const formLoading = ref(false)
-
-const handleConfirm = () => {
-  formRef.value?.validate(async (valid) => {
-    if (valid) {
-      formLoading.value = true
-      try {
-        if (formData.value.id) {
-          await updateData({ ...formData.value })
-        } else {
-          await createData({ ...formData.value })
-        }
-        ElMessage({
-          type: 'success',
-          message: formData.value.id ? '编辑成功' : '新增成功'
-        })
-      } finally {
-        formLoading.value = false
-      }
-      visible.value = false
-      await props.getList()
-    }
-  })
+const handleConfirm = async () => {
+  try {
+    loading.value = true
+    await userTestApi[UPDATE_STATE_API]({
+      id: (questionsMergeValues.value as any).id as number,
+      scores: questionsMergeValues.value.questions.map((it: any) => it.score)
+    })
+    await props.getList()
+    ElMessage({
+      type: 'success',
+      message: formData.value.id ? '编辑成功' : '新增成功'
+    })
+  } finally {
+    loading.value = false
+  }
+  visible.value = false
 }
 const handleClose = () => {
   formRef.value?.resetFields()
+  showSke.value = true
 }
-const open = (title: string, row?: ICourseRequest) => {
-  visible.value = true
-  dialogTitle.value = title
-  nextTick(() => {
-    if (row && row.id) {
-      formData.value = cloneDeep({
-        ...row,
-        price: parseFloat(row.price as any),
-        t_price: parseFloat(row.t_price as any)
-      })
+// 提供给Question组件的融合对象
+// 融合了 用户答案, 标准答案, 每题分数最大限制, 每题打分
+const mergeInfoData = () => {
+  const infoTemp: any = cloneDeep(infoData.value)
+  infoTemp.questions.forEach((item: any, index: number) => {
+    const maxScore = item.score
+    item.score = infoTemp.values[index].score
+    item.maxScore = maxScore
+    const userAnswer = infoTemp.values[index].answer
+    if (userAnswer === '') {
+      item.userAnswer = ''
+    } else if (Array.isArray(userAnswer)) {
+      if (userAnswer.length === 0 && userAnswer.includes('')) {
+        item.userAnswer = ''
+      }
+    } else if (item.userAnswer === -1) {
+      item.userAnswer = ''
+    } else {
+      item.userAnswer = userAnswer
     }
   })
+  questionsMergeValues.value = infoTemp
+}
+
+const open = async (title: string, row?: ITestItem) => {
+  try {
+    loading.value = true
+    visible.value = true
+    dialogTitle.value = `${title}  -  ${row!.testpaper.title}`
+    infoData.value = await getInfoData(row!.id as number)
+    mergeInfoData()
+  } finally {
+    loading.value = false
+    showSke.value = false
+  }
+}
+
+const handleChangeQuestion = (questions: any, index: number) => {
+  ;(questionsMergeValues.value as any).questions![index] = questions
 }
 defineExpose({ open })
 </script>
@@ -74,53 +105,61 @@ defineExpose({ open })
 <template>
   <div class="edit-dialog">
     <DialogBase
-      :loading="formLoading"
+      :loading="loading"
       v-model="visible"
       :title="dialogTitle"
       show-btn
       @confirm="handleConfirm"
       @close="handleClose"
     >
-      <el-form
-        ref="formRef"
-        :model="formData"
-        :rules="rules"
-        label-width="80px"
-        size="default"
-      >
-        <el-form-item label="标题" prop="title">
-          <el-input v-model="formData.title"></el-input>
-        </el-form-item>
-        <el-form-item label="封面" prop="cover">
-          <UploadCrop v-model="formData.cover"></UploadCrop>
-        </el-form-item>
-        <el-form-item label="试看内容" prop="try">
-          <Editor v-model="formData.try" />
-        </el-form-item>
-        <el-form-item label="课程内容" prop="content">
-          <Editor v-model="formData.content" />
-        </el-form-item>
-        <el-form-item label="课程价格" prop="price">
-          <el-input-number
-            v-model="formData.price"
-            :min="0"
-            :precision="2"
-          ></el-input-number>
-        </el-form-item>
-        <el-form-item label="划线价格" prop="t_price">
-          <el-input-number
-            v-model="formData.t_price"
-            :min="0"
-            :precision="2"
-          ></el-input-number>
-        </el-form-item>
-        <el-form-item label="状态" prop="status">
-          <el-radio-group v-model="formData.status">
-            <el-radio :label="0">下架</el-radio>
-            <el-radio :label="1">上架</el-radio>
-          </el-radio-group>
-        </el-form-item>
-      </el-form>
+      <!-- <pre>
+      {{ infoData }}
+    </pre
+      > -->
+      <div v-loading="loading" v-if="!showSke">
+        <template
+          v-for="(item, index) in (questionsMergeValues as any).questions"
+          :key="item.id"
+        >
+          <Question
+            :index="(index as unknown as number)"
+            :question="(item as any)"
+            :max-score="item.maxScore"
+            @change-question="
+              (question) => handleChangeQuestion(question, index)
+            "
+            :user-answer="item.userAnswer || '(用户未填写答案)'"
+          >
+            <template #delete_btn>
+              {{ `本题分值${item.maxScore}` }}
+            </template>
+          </Question>
+        </template>
+      </div>
+      <div v-else>
+        <el-skeleton
+          v-if="loading"
+          animated
+          :rows="3"
+          class="pt-10"
+        ></el-skeleton>
+        <el-skeleton
+          v-if="loading"
+          animated
+          :rows="4"
+          class="pt-10"
+        ></el-skeleton>
+      </div>
+      <template #append>
+        <div class="ml-auto text-sm mt-6">
+          共
+          <span class="text-red-500"
+            >{{ ((questionsMergeValues as any).questions as any[]).length }}
+          </span>
+          题 &nbsp;&nbsp;分数:
+          <span class="text-red-500">{{ scoreCalc }}</span> 分
+        </div>
+      </template>
     </DialogBase>
   </div>
 </template>

@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { questionTypes } from '@/constants/question'
 const props = defineProps({
   question: {
     type: Object,
@@ -7,6 +8,14 @@ const props = defineProps({
   index: {
     type: Number,
     default: 0
+  },
+  maxScore: {
+    type: Number,
+    default: 200
+  },
+  userAnswer: {
+    type: [Array, String, Number],
+    default: ''
   }
 })
 
@@ -63,7 +72,9 @@ const handleDelete = () => {
   <div class="w-full el-card p-4 mb-4">
     <div class="flex items-center">
       <div class="flex items-center">
-        <el-tag type="" class="mr-4">单选题</el-tag>
+        <el-tag type="" class="mr-4">{{
+          questionTypes[question.question.type]
+        }}</el-tag>
         <div>
           第
           <span class="w-5 inline-block text-center">{{ index + 1 }}</span> 题
@@ -79,25 +90,34 @@ const handleDelete = () => {
           class="mx-4"
           v-model="currentScore"
           :min="0"
+          :max="maxScore"
         ></el-input-number>
-        <el-popconfirm title="确定删除吗？" @confirm="handleDelete">
-          <template #reference>
-            <el-button type="danger"> 删除 </el-button>
-          </template>
-        </el-popconfirm>
+        <slot name="delete_btn">
+          <el-popconfirm title="确定删除吗？" @confirm="handleDelete">
+            <template #reference>
+              <el-button type="danger"> 删除 </el-button>
+            </template>
+          </el-popconfirm>
+        </slot>
       </div>
     </div>
     <el-divider v-if="question.question.type !== 'answer'"></el-divider>
     <div class="py-2" v-if="question.question.type !== 'answer'">
       <template v-for="(item, index) in options" :key="index">
         <div class="flex items-center h-14">
-          <el-tag type="info" class="mr-4">{{ lettersCalc[index] }}</el-tag>
+          <el-tag
+            type="info"
+            class="mr-4"
+            v-if="question.question.type !== 'completion'"
+            >{{ lettersCalc[index] }}</el-tag
+          >
+          <el-tag type="info" class="mr-4" v-else>{{ index + 1 }}</el-tag>
           <div v-html="item"></div>
         </div>
       </template>
     </div>
-    <el-divider></el-divider>
-    <div>
+    <div v-if="question.question.type !== 'completion'">
+      <el-divider></el-divider>
       标准答案:
       <template v-if="question.question.type === 'answer'">
         <span
@@ -108,6 +128,20 @@ const handleDelete = () => {
       <template v-else>
         <span class="text-xl ml-4">{{
           parseAnswerFilter(question.question.type, value)
+        }}</span>
+      </template>
+    </div>
+
+    <div v-if="userAnswer">
+      <el-divider></el-divider>
+      用户答案:
+      <template v-if="question.question.type === 'answer'">
+        <span class="text-xl ml-4" v-html="userAnswer"></span>
+      </template>
+      <template v-else>
+        <span class="text-xl ml-4">{{
+          parseAnswerFilter(question.question.type, userAnswer) ||
+          '(用户未填写答案)'
         }}</span>
       </template>
     </div>

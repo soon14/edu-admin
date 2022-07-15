@@ -2,6 +2,8 @@
 import { ITestItem, ITestListReq } from '@/api/module/types/user-test'
 import usePageAction from '@/hooks/usePageAction'
 import useTableColumns from './config/useTableColumns'
+import EditDialog from './components/edit-dialog.vue'
+
 const answerOptions = ref([
   { label: '全部答题', value: '' },
   { label: '答题中', value: 0 },
@@ -26,8 +28,11 @@ const handleDelete = (row: ITestItem) => {
   const title = `是否删除?`
   deleteData(row, title)
 }
-
-const handleToPage = (row: ITestItem) => {}
+const editDialogRef = ref<InstanceType<typeof EditDialog> | null>(null)
+// 阅卷
+const handleToPage = (row: ITestItem) => {
+  editDialogRef.value?.open('阅卷', row)
+}
 const handleSearch = () => {
   searchData()
 }
@@ -96,6 +101,7 @@ getListData()
         <el-tag type="info" v-else>否</el-tag>
       </template>
     </PageTable>
+    <EditDialog ref="editDialogRef" :get-list="getListData"></EditDialog>
   </el-card>
 </template>
 
