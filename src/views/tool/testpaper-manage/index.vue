@@ -36,7 +36,7 @@ const handleToPage = (row: ITestItem) => {
 const handleSearch = () => {
   searchData()
 }
-const columns = useTableColumns({ handleDelete, handleToPage })
+const columns = useTableColumns({ handleDelete })
 
 getListData()
 </script>
@@ -99,6 +99,14 @@ getListData()
       <template #read_status="{ row }">
         <el-tag type="success" v-if="row.read_status">是</el-tag>
         <el-tag type="info" v-else>否</el-tag>
+      </template>
+      <template #btn-prefix="{ row }">
+        <el-button
+          :type="!!row.read_status ? '' : 'primary'"
+          :disabled="!!row.read_status"
+          @click="handleToPage(row)"
+          >{{ !!row.read_status ? '已阅' : '阅卷' }}</el-button
+        >
       </template>
     </PageTable>
     <EditDialog ref="editDialogRef" :get-list="getListData"></EditDialog>

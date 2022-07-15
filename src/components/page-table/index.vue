@@ -178,6 +178,7 @@ onMounted(() => {
         <el-table-column v-bind="item" v-if="item.type === 'action_btn'">
           <template #default="{ row, $index }">
             <el-space wrap>
+              <slot name="btn-prefix" :row="row" :index="$index"></slot>
               <template v-for="(btn, bIndex) in item?.btns" :key="bIndex">
                 <template v-if="!btn.slot">
                   <el-button

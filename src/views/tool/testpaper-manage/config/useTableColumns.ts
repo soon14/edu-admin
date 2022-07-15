@@ -1,12 +1,6 @@
 import { IColumn } from '@/components/page-table/types'
 
-export default ({
-  handleToPage,
-  handleDelete
-}: {
-  handleToPage: any
-  handleDelete: any
-}) => {
+export default ({ handleDelete }: { handleDelete: any }) => {
   const columns: IColumn[] = [
     {
       label: '#',
@@ -69,10 +63,7 @@ export default ({
       fixed: 'right',
       align: 'center',
       headerAlign: 'center',
-      btns: [
-        { name: '阅卷', type: 'primary', handle: handleToPage },
-        { name: '删除', type: 'danger', handle: handleDelete }
-      ]
+      btns: [{ name: '删除', type: 'danger', handle: handleDelete }]
     }
   ]
   return columns
