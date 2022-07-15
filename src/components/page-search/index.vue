@@ -69,8 +69,8 @@ defineExpose({ validate })
           <slot name="left"></slot>
         </el-col>
         <el-col :span="24" :md="12">
-          <slot name="right"></slot>
           <div class="flex lg:justify-end mt-2 lg:mt-0">
+            <slot name="right"></slot>
             <el-select
               class="w-94px"
               v-model="selected"
