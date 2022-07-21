@@ -24,6 +24,7 @@
     "vue": "^3.2.25",
     "vue-cropper": "^1.0.3",
     "vue-router": "^4.0.16",
+    "vue3-count-to": "^1.1.2",
     "xlsx": "^0.18.5"
   },
   "devDependencies": {

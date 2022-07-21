@@ -103,6 +103,7 @@ function getMenus(menus: IMenu[], routes: RouteRecordRaw[]) {
       tempObj.path = targetRoute?.path ? '/' + targetRoute?.path : ''
       tempObj.name = item.name
       tempObj.meta.hidden = item.hidden ?? targetRoute?.meta?.hidden
+      tempObj.meta.hiddenHistory = targetRoute?.meta?.hiddenHistory
       tempObj.meta.title = item.title ?? targetRoute?.meta?.title
       tempObj.meta.icon = iconMap[item.name] || targetRoute?.meta?.icon
       result.push(tempObj)

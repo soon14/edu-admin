@@ -9,6 +9,12 @@ const titles = [
   '英语四级-通关畅学班第1期',
   '中级经济法-知识点精讲课'
 ]
+const imgs = [
+  'https://img2.baidu.com/it/u=852969322,1820346618&fm=253&fmt=auto&app=138&f=JPEG?w=600&h=337',
+  'https://img1.baidu.com/it/u=3126737802,3030532665&fm=253&fmt=auto&app=138&f=JPEG?w=497&h=500',
+  'https://img0.baidu.com/it/u=555250675,2314873960&fm=253&fmt=auto&app=138&f=JPEG?w=500&h=281',
+  'https://img0.baidu.com/it/u=564979755,437025330&fm=253&fmt=auto&app=138&f=JPEG?w=667&h=500'
+]
 const getRandom = (min: number, max: number) => {
   min = Math.ceil(min)
   max = Math.floor(max)
@@ -17,4 +23,8 @@ const getRandom = (min: number, max: number) => {
 export const getTitle = () => {
   const index = getRandom(0, titles.length - 1)
   return titles[index]
+}
+export const getImg = () => {
+  const index = getRandom(0, imgs.length - 1)
+  return imgs[index]
 }
