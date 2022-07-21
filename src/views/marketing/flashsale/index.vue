@@ -48,7 +48,12 @@ getListData()
       <template #flashale_content="{ row }">
         <div class="course-graphics">
           <div class="course-cover">
-            <img :src="row.value.cover || '/img_default.svg'" alt="" />
+            <el-image
+              class="w-13 h-13"
+              lazy
+              :src="row.value.cover"
+              fit="cover"
+            ></el-image>
           </div>
           <div class="course-desc">
             <div class="course-title">{{ row.value.title }}</div>

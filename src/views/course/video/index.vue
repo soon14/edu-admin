@@ -81,7 +81,12 @@ getListData()
       <template #media="{ row }">
         <div class="course-graphics">
           <div class="course-cover">
-            <img :src="row.cover || '/img_default.svg'" alt="" />
+            <el-image
+              class="w-14 h-14"
+              lazy
+              :src="row.cover"
+              fit="cover"
+            ></el-image>
           </div>
           <div class="course-desc">
             <div class="course-title">{{ row.title }}</div>

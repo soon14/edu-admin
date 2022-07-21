@@ -47,11 +47,13 @@ getListData()
     >
       <template #user="{ row }">
         <div class="flex items-center">
-          <img
-            class="w-10 rounded mr-2"
-            :src="row.user.avatar || '/img_default.svg'"
-            alt=""
-          />
+          <el-image
+            class="w-6 h-6 rounded-full mr-2"
+            lazy
+            :src="row.user.avatar"
+            fit="cover"
+          ></el-image>
+
           <div>{{ row.user.username || row.user.username }}</div>
         </div>
       </template>

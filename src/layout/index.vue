@@ -16,22 +16,30 @@ const collapse = computed(() => systemStore.collapse)
       </el-header>
       <el-container>
         <el-aside
-          class="layout-left el-card c-border block absolute z-10 md:static"
-          :class="[collapse ? 'is-phone-hide' : 'is-phone-show']"
+          class="layout-left el-card c-border block absolute z-10 md:static block md:hidden"
           :width="collapse ? 'auto' : '200px'"
         >
-          <el-scrollbar>
-            <!--侧导航 -->
-            <Aside></Aside>
-            <Teleport to="body">
-              <div
-                @click="systemStore.changeCollapse()"
-                v-show="!systemStore.collapse"
-                class="mask left-[-1px] right-0 top-[59px] bottom-0 bg-black opacity-50 absolute block md:hidden duration-200"
-              ></div>
-              <!-- <transition name="el-fade-in-linear">
+          <!-- <div @click="systemStore.changeCollapse()">111</div> -->
+          <Aside :class="collapse ? '-ml-44' : ''"></Aside>
+          <Teleport to="body">
+            <div
+              @click="systemStore.changeCollapse()"
+              v-show="!systemStore.collapse"
+              class="mask left-[-1px] right-0 top-[59px] bottom-0 bg-black opacity-50 absolute block md:hidden duration-200"
+            ></div>
+            <!-- <transition name="el-fade-in-linear">
               </transition> -->
-            </Teleport>
+          </Teleport>
+        </el-aside>
+        <el-aside
+          class="layout-left el-card c-border block absolute z-10 md:static hidden md:block"
+          :width="collapse ? 'auto' : '200px'"
+        >
+          <!-- :class="[collapse ? 'is-phone-hide' : 'is-phone-show']"
+          :width="collapse ? 'auto' : '200px'" -->
+          <el-scrollbar>
+            <!--pc侧导航 -->
+            <Aside></Aside>
           </el-scrollbar>
         </el-aside>
         <el-main class="layout-right c-bg-base p-0">

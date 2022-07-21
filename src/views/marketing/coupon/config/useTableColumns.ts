@@ -5,14 +5,14 @@ export default ({ handleEdit }: { handleEdit: any }) => {
     {
       label: '#',
       prop: 'custom_index',
-      width: '100px',
+      width: '50px',
       align: 'center',
       headerAlign: 'center'
     },
     {
       label: '优惠券id',
       prop: 'id',
-      width: '150px',
+      width: '80px',
       align: 'center',
       headerAlign: 'center'
     },
@@ -20,7 +20,7 @@ export default ({ handleEdit }: { handleEdit: any }) => {
     {
       label: '使用课程',
       slot: 'use_course',
-      width: '260px'
+      width: '460px'
     },
     {
       label: '活动开始',

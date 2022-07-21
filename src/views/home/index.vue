@@ -82,12 +82,12 @@ getAllData()
     <template v-else>
       <el-row :gutter="18">
         <template v-for="(item, index) in cards" :key="index">
-          <el-col :span="12" :md="6">
+          <el-col :span="12" :md="6" class="mt-4 md:mt-0">
             <el-card shadow="never">
               <div class="flex items-center justify-start">
                 <i class="text-42px" :class="item.icon"></i>
                 <div class="flex flex-col ml-4">
-                  <div class="text-sm">{{ item.title }}</div>
+                  <div class="text-12px">{{ item.title }}</div>
                   <count-to
                     class="mt-2"
                     :start-val="0"
@@ -168,12 +168,13 @@ getAllData()
                 <template #default="{ row }">
                   <div class="flex">
                     <el-image
+                      lazy
                       :src="row.cover"
                       fit="cover"
                       class="w-12 h-12 mr-4"
                     ></el-image>
                     <div>
-                      <div v-html="row.title"></div>
+                      <div v-html="row.title" class="line-clamp-1"></div>
                       <div class="mt-2 text-sm text-red-500">
                         &yen;{{ row.price }}
                       </div>
@@ -204,7 +205,7 @@ getAllData()
             <el-table :data="orderList">
               <el-table-column label="商品名称" width="400">
                 <template #default="{ row }">
-                  <div class="h-51px flex items-center">
+                  <div class="h-51px flex items-center line-clamp-1">
                     {{ row.title }}
                   </div>
                 </template>

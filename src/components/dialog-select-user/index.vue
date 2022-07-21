@@ -87,7 +87,8 @@ defineExpose({ open, close: () => (visible.value = false) })
             <div
               class="w-10 h-10 mr-2 rounded-full overflow-hidden object-cover"
             >
-              <img :src="row.user.avatar || '/img_default.svg'" alt="" />
+              <!-- <img :src="row.user.avatar || '/img_default.svg'" alt="" /> -->
+              <el-image lazy :src="row.user.avatar" fit="cover"></el-image>
             </div>
             <div>{{ row.user.nickname || row.user.username }}</div>
           </div>

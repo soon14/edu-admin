@@ -47,7 +47,12 @@ getListData()
       <template #group_content="{ row }">
         <div class="course-graphics">
           <div class="course-cover">
-            <img :src="row.value.cover || '/img_default.svg'" alt="" />
+            <el-image
+              class="w-13 h-13 relative top-1"
+              lazy
+              :src="row.value.cover"
+              fit="cover"
+            ></el-image>
           </div>
           <div class="course-desc">
             <div class="course-title">{{ row.value.title }}</div>
