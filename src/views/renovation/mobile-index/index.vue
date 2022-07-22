@@ -31,7 +31,6 @@ const handleEdit = (row: IRenovationUpdateRequest) => {
 const router = useRouter()
 // 进入装修页
 const handleToDetailPage = (row: any) => {
-  console.log(row.id, '??')
   router.push({ name: 'MobileEdit', params: { id: row.id } })
 }
 

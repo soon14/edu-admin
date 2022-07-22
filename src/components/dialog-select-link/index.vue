@@ -71,7 +71,7 @@ defineExpose({ open, close: () => (visible.value = false) })
     @close="handleClose"
     title="选择关联"
     top="3%"
-    showBtn
+    show-btn
     @confirm="handleConfirm"
   >
     <div>

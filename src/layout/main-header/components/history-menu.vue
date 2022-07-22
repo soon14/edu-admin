@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { useSystem } from '@/store/system'
-
 const systemStore = useSystem()
 const router = useRouter()
 const currentRoute = computed(() => router.currentRoute.value)
@@ -60,11 +59,15 @@ const handleToPageByPath = (path: string) => {
           @click="handleToPageByPath(item.path)"
         >
           {{ item.title }}
-          <i
-            class="fas fa-xmark light:text-gray-400 light:hover:text-gray-900 dark:hover:text-white"
-            v-if="item.path !== '/'"
+          <div
+            class="inline-block h-20px flex items-center justify-center relative left-2 close-box duration-200"
             @click.stop="handleRemoveItemByPath(item.path)"
-          ></i>
+          >
+            <i
+              class="fas fa-xmark light:text-gray-400 pr-2"
+              v-if="item.path !== '/'"
+            ></i>
+          </div>
         </div>
       </template>
     </div>
@@ -78,7 +81,7 @@ const handleToPageByPath = (path: string) => {
     @apply flex;
   }
   .history-item {
-    @apply py-2 px-4 text-sm select-none cursor-pointer
+    @apply h-36px px-4 text-sm select-none cursor-pointer flex items-center
             flex-none
           hover: bg-white hover:bg-opacity-40 hover:dark:text-white
              rounded-none border-t-0 border-b-0 border-l-0
@@ -93,6 +96,9 @@ const handleToPageByPath = (path: string) => {
               light:bg-light-600 dark:text-white;
     }
   }
+}
+.close-box:hover {
+  color: var(--el-color-primary);
 }
 </style>
 <script lang="ts">

@@ -32,7 +32,6 @@ const editorConfig: Partial<IEditorConfig> = {
       // 自定义上传
       async customUpload(file: File, insertFn: InsertFnType) {
         // file 即选中的文件
-        console.log(file)
         // 自己实现上传，并得到图片 url alt href
         // 最后插入图片
         // insertFn(url, alt, href)

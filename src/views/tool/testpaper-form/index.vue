@@ -65,7 +65,6 @@ const handleSave = async () => {
     if (idCalc.value) {
       await testpaperApi[UPDATE_API](params as any)
     } else {
-      console.log(params)
       await testpaperApi[CREATE_API](params as any)
     }
     idCalc.value && (await getInfoData())
@@ -153,9 +152,9 @@ onMounted(async () => {
               <Question
                 :index="(index as unknown as number)"
                 :question="(item as any)"
-                @delete="(id) => handleDelete(id, index)"
+                @delete="(id: number) => handleDelete(id, index)"
                 @change-question="
-                  (question) => handleChangeQuestion(question, index)
+                  (question:any) => handleChangeQuestion(question, index)
                 "
               ></Question>
             </template>

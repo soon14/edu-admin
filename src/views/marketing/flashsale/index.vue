@@ -58,7 +58,7 @@ getListData()
           <div class="course-desc">
             <div class="course-title">{{ row.value.title }}</div>
             <div class="">
-              价格: <span class="course-price">{{ row.price }}</span
+              价格: <span class="course-price">&yen; {{ row.price }}</span
               ><del class="ml-1 text-12px opacity-70">{{
                 row.value.price
               }}</del>

@@ -90,8 +90,8 @@ const handleCloseLink = () => {
                 <div class="desc">
                   <div class="title">{{ (item as any).title }}</div>
                   <div class="price">
-                    <span class="red">{{ (item as any).price }}</span>
-                    <span class="del">{{ (item as any).t_price }}</span>
+                    <span class="red">&yen; {{ (item as any).price }}</span>
+                    <span class="del">&yen; {{ (item as any).t_price }}</span>
                     <el-popconfirm
                       title="确定删除 ？"
                       @confirm="handleCloseCourse(index)"

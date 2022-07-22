@@ -37,7 +37,6 @@ export default () => {
     } finally {
       loading.value = false
     }
-    console.log(data.value)
   }
   // 更新/保存模板详情
   async function updateData() {
@@ -57,7 +56,6 @@ export default () => {
   }
   // 根据索引向上移动模板
   function moveTop() {
-    console.log('top')
     const index = activeIndex.value
     if (index !== 0) {
       const target = data.value.template.splice(index, 1)[0]

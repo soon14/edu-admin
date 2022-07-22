@@ -22,7 +22,7 @@ export default ({
     {
       label: '社区名称',
       prop: 'title',
-      width: '240px'
+      width: '440px'
     },
     {
       label: '管理员',

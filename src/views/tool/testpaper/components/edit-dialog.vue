@@ -90,24 +90,24 @@ defineExpose({ open })
           <el-input v-model="formData.title"></el-input>
         </el-form-item>
         <el-form-item label="封面" prop="cover">
-          <UploadCrop v-model="formData.cover"></UploadCrop>
+          <UploadCrop v-model="(formData as any).cover"></UploadCrop>
         </el-form-item>
         <el-form-item label="试看内容" prop="try">
-          <Editor v-model="formData.try" />
+          <Editor v-model="(formData as any).try" />
         </el-form-item>
         <el-form-item label="课程内容" prop="content">
-          <Editor v-model="formData.content" />
+          <Editor v-model="(formData as any).content" />
         </el-form-item>
         <el-form-item label="课程价格" prop="price">
           <el-input-number
-            v-model="formData.price"
+            v-model="(formData as any).price"
             :min="0"
             :precision="2"
           ></el-input-number>
         </el-form-item>
         <el-form-item label="划线价格" prop="t_price">
           <el-input-number
-            v-model="formData.t_price"
+            v-model="(formData as any).t_price"
             :min="0"
             :precision="2"
           ></el-input-number>

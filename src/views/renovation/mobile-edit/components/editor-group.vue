@@ -56,12 +56,12 @@ const handleCloseCourse = (index: number) => {
               </div>
               <div class="price items-center mt-auto">
                 <div class="w-50 inline-block">
-                  <span class="text-red-500 mr-2">{{
-                    (item as any).price
-                  }}</span>
-                  <span class="text-sm opacity-40">{{
-                    (item as any).t_price
-                  }}</span>
+                  <span class="text-red-500 mr-2"
+                    >&yen; {{ (item as any).price }}</span
+                  >
+                  <span class="text-sm opacity-40"
+                    >&yen; {{ (item as any).t_price }}</span
+                  >
                 </div>
                 <!--  -->
                 <el-popconfirm

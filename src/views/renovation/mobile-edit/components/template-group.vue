@@ -38,8 +38,8 @@ watch(
         </div>
         <div class="mt-1 text-sm w-full text-left px-2">{{ item.title }}</div>
         <div class="mt-2 text-sm w-full text-left px-2">
-          <div class="text-red-500 mr-1">{{ item.price }}</div>
-          <del class="text-sm opacity-50">{{ item.t_price }}</del>
+          <div class="text-red-500 mr-1">&yen; {{ item.price }}</div>
+          <del class="text-sm opacity-50">&yen; {{ item.t_price }}</del>
         </div>
       </div>
     </div>

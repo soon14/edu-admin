@@ -112,7 +112,7 @@ const completionColumns = completion({ handleDelete })
         <template #answer="{ row, index }">
           <AnswerEditor
             :model-value="row + ''"
-            @update:model-value="(val) => handleEditAnswer(val, index)"
+            @update:model-value="(val: any) => handleEditAnswer(val, index)"
           ></AnswerEditor>
         </template>
       </PageTable>
@@ -139,7 +139,7 @@ const completionColumns = completion({ handleDelete })
         <template #answer="{ row, index }">
           <AnswerEditor
             :model-value="row + ''"
-            @update:model-value="(val) => handleEditAnswer(val, index)"
+            @update:model-value="(val:any) => handleEditAnswer(val, index)"
           ></AnswerEditor>
         </template>
       </PageTable>
@@ -166,7 +166,7 @@ const completionColumns = completion({ handleDelete })
         <template #answer="{ row, index }">
           <AnswerEditor
             :model-value="row + ''"
-            @update:model-value="(val) => handleEditAnswer(val, index)"
+            @update:model-value="(val:any) => handleEditAnswer(val, index)"
           ></AnswerEditor>
         </template>
       </PageTable>
@@ -193,7 +193,7 @@ const completionColumns = completion({ handleDelete })
         <template #answer="{ row, index }">
           <AnswerEditor
             :model-value="row + ''"
-            @update:model-value="(val) => handleEditAnswer(val, index)"
+            @update:model-value="(val:any) => handleEditAnswer(val, index)"
           ></AnswerEditor>
         </template>
       </PageTable>
@@ -203,7 +203,7 @@ const completionColumns = completion({ handleDelete })
         <template #option="{ row, index }">
           <AnswerEditor
             :model-value="row + ''"
-            @update:model-value="(val) => handleEditAnswer(val, index)"
+            @update:model-value="(val:any) => handleEditAnswer(val, index)"
           ></AnswerEditor>
         </template>
       </PageTable>

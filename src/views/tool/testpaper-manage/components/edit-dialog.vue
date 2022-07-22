@@ -126,7 +126,7 @@ defineExpose({ open })
             :question="(item as any)"
             :max-score="item.maxScore"
             @change-question="
-              (question) => handleChangeQuestion(question, index)
+              (question : any) => handleChangeQuestion(question, index)
             "
             :user-answer="item.userAnswer || '(用户未填写答案)'"
           >

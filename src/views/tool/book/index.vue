@@ -28,7 +28,6 @@ const {
 const editDialogRef = ref<InstanceType<typeof EditDialog> | null>(null)
 
 const handleState = async (row: IBook) => {
-  console.log(row.id, '??')
   updateStateData(row, ['已下架', '已上架'])
 }
 const handleCreated = () => {
@@ -99,8 +98,8 @@ getListData()
             ></el-image>
           </div>
           <div class="course-desc">
-            <div class="course-title">{{ row.title }}</div>
-            <div class="course-price">{{ row.price }}</div>
+            <div class="course-title">&yen; {{ row.title }}</div>
+            <div class="course-price">&yen; {{ row.price }}</div>
           </div>
         </div>
       </template>

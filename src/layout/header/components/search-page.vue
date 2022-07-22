@@ -56,7 +56,7 @@ function getRouteByWord(word: string, menus: RouteRecordRaw[]) {
   menus.forEach((menu) => {
     deep(word, menu)
   })
-  return result
+  return result.filter((it) => !it?.meta?.hidden && !it?.meta?.hiddenHistory)
 }
 // [ {},{} ] =>  [ [{},{}], [{},{}] ]
 function getParentAndCurrent(

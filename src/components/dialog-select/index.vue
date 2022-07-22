@@ -151,7 +151,7 @@ defineExpose({ open, close: () => (visible.value = false) })
               </div>
               <div class="course-desc">
                 <div class="course-title">{{ row.title }}</div>
-                <div class="course-price">{{ row.price }}</div>
+                <div class="course-price">&yen; {{ row.price }}</div>
               </div>
             </div>
           </template>

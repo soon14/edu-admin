@@ -50,7 +50,7 @@ export default ({ handleToDetailPage }: { handleToDetailPage: any }) => {
       align: 'center',
       headerAlign: 'center',
       width: '80px',
-      btns: [{ name: '详情', type: 'text', handle: handleToDetailPage }]
+      btns: [{ name: '详情', type: 'primary', handle: handleToDetailPage }]
     }
   ]
   return columns

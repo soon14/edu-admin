@@ -18,14 +18,14 @@ const handleCommand = (type: CommandType) => {
       <span
         class="el-dropdown-link select-none flex items-center cursor-pointer"
       >
-        <el-avatar
-          class="bg-light-900"
-          icon="el-icon-user-solid"
-          size="small"
-          shape="circle"
-          :src="authStore.userInfo?.avatar || '/avatar.jpg'"
-          fit="fill"
-        ></el-avatar>
+        <el-image
+          class="w-6 h-6 rounded-full"
+          fit="cover"
+          :src="
+            authStore.userInfo?.avatar ||
+            'https://img0.baidu.com/it/u=3897466336,342561281&fm=253&fmt=auto&app=138&f=JPEG?w=354&h=499'
+          "
+        />
         <span class="ml-2 text-base">
           {{ authStore.userInfo?.name }}
         </span>

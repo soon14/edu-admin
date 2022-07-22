@@ -60,6 +60,8 @@ router.beforeEach(async (to) => {
   } else {
     if (to.path !== '/login') {
       return '/login'
+    } else {
+      isRefresh = false
     }
   }
 })

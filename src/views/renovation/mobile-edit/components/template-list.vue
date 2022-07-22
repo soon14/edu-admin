@@ -29,8 +29,8 @@ const props = defineProps({
           <div class="desc">
             <div class="title">{{ item.title }}</div>
             <div class="price">
-              <span class="red">{{ item.price }}</span>
-              <span class="del">{{ item.t_price }}</span>
+              <span class="red">&yen; {{ item.price }}</span>
+              <span class="del">&yen; {{ item.t_price }}</span>
             </div>
           </div>
         </div>

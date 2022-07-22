@@ -36,15 +36,19 @@ const formData = ref<Partial<IGroup>>({
     type: ''
   }
 })
-const startAndEndTime = computed({
-  set(data: any[]) {
-    formData.value.start_time = data[0]
-    formData.value.end_time = data[1]
-  },
-  get() {
-    return [formData.value.start_time, formData.value.end_time]
-  }
-})
+// const startAndEndTime = computed({
+//   set(data: any[]) {
+//     formData.value.start_time = data[0]
+//     formData.value.end_time = data[1]
+//   },
+//   get() {
+//     return [formData.value.start_time, formData.value.end_time]
+//   }
+// })
+const handleTimeUpdate = (data: any) => {
+  formData.value.start_time = data[0]
+  formData.value.end_time = data[1]
+}
 const typeOptions = [
   { label: '课程', value: 'course' },
   { label: '专栏', value: 'column' }
@@ -185,7 +189,8 @@ defineExpose({ open })
         <el-form-item label="拼团时间范围" prop="start_time">
           <div class="w-10">
             <el-date-picker
-              v-model="(startAndEndTime as any)"
+              :model-value="[formData.start_time!, formData.end_time!]"
+              @update:model-value="handleTimeUpdate"
               value-format="YYYY-MM-DD HH:mm:ss"
               format="YYYY-MM-DD HH:mm:ss"
               type="datetimerange"
